@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bahar Bagheri | Robotic Atlas</title>
+  <meta name="description" content="Bahar Bagheri portfolio website: computational design, architecture, robotic construction, programming, and fabrication." />
+  <style>
+    :root {
+      --bg: #050608;
+      --panel: rgba(255,255,255,0.04);
+      --panel-strong: rgba(255,255,255,0.07);
+      --line: rgba(255,255,255,0.10);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --soft: #94a3b8;
+      --cyan: #a5f3fc;
+      --cyan-strong: #67e8f9;
+      --orange: #fdba74;
+      --blue: #93c5fd;
+      --radius: 32px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: var(--cyan);
+      color: #000;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--line);
+      background: rgba(5, 6, 8, 0.78);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      position: relative;
+      display: inline-flex;
+      width: 38px;
+      height: 38px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid rgba(165, 243, 252, 0.36);
+      background: rgba(165, 243, 252, 0.05);
+    }
+
+    .brand-mark::before {
+      content: "";
+      position: absolute;
+      inset: -7px;
+      border: 1px solid rgba(165, 243, 252, 0.16);
+      border-radius: inherit;
+      animation: orbitSpin 18s linear infinite;
+    }
+
+    .brand-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--cyan);
+    }
+
+    .brand-title {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-subtitle {
+      display: block;
+      color: #64748b;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-links a {
+      border-radius: 999px;
+      padding: 9px 14px;
+      color: #cbd5e1;
+      font-size: 14px;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: #e2e8f0;
+      padding: 10px 12px;
+      cursor: pointer;
+    }
+
+    .mobile-menu {
+      display: none;
+      border-top: 1px solid var(--line);
+      background: rgba(5,6,8,0.96);
+      padding: 12px 20px 18px;
+    }
+
+    .mobile-menu a {
+      display: block;
+      border-radius: 18px;
+      padding: 11px 14px;
+      color: #cbd5e1;
+    }
+
+    .mobile-menu a:hover {
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+    }
+
+    main {
+      overflow: hidden;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 130px 0 80px;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.82;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 70% 25%, rgba(142,234,255,0.12), transparent 32%),
+        radial-gradient(circle at 20% 80%, rgba(255,138,61,0.10), transparent 28%),
+        linear-gradient(to bottom, rgba(5,6,8,0.25), #050608);
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 54px;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: rgba(165, 243, 252, 0.78);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.42em;
+    }
+
+    h1, h2, h3, p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 930px;
+      margin-bottom: 28px;
+      font-size: clamp(48px, 8vw, 96px);
+      line-height: 0.95;
+      font-weight: 750;
+      letter-spacing: -0.075em;
+    }
+
+    .gradient-text {
+      display: block;
+      background: linear-gradient(90deg, var(--cyan), #f8fafc, var(--orange));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-copy {
+      max-width: 680px;
+      color: #cbd5e1;
+      font-size: clamp(18px, 2vw, 21px);
+      line-height: 1.75;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(165, 243, 252, 0.45);
+      border-radius: 999px;
+      background: rgba(165, 243, 252, 0.10);
+      color: #ecfeff;
+      padding: 13px 18px;
+      font-size: 14px;
+      font-weight: 650;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(236, 254, 255, 0.9);
+      background: rgba(165, 243, 252, 0.16);
+    }
+
+    .button.secondary,
+    .button.download {
+      border-color: rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.035);
+      color: #e2e8f0;
+    }
+
+    .button.secondary:hover,
+    .button.download:hover {
+      border-color: rgba(253, 186, 116, 0.56);
+      color: #fed7aa;
+    }
+
+    .button svg {
+      transition: transform 180ms ease;
+    }
+
+    .button:hover svg {
+      transform: translateX(4px);
+    }
+
+    .orbital-card {
+      position: relative;
+      width: min(100%, 460px);
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.025);
+      box-shadow: 0 35px 85px rgba(8, 145, 178, 0.18);
+    }
+
+    .orbital-card::before {
+      content: "";
+      position: absolute;
+      inset: 34px;
+      border: 1px solid rgba(165,243,252,0.22);
+      border-radius: inherit;
+      animation: orbitSpin 18s linear infinite;
+    }
+
+    .orbital-card::after {
+      content: "";
+      position: absolute;
+      inset: 92px;
+      border: 1px solid rgba(253,186,116,0.22);
+      border-radius: inherit;
+    }
+
+    .orbit-line-1,
+    .orbit-line-2 {
+      position: absolute;
+      background: rgba(165, 243, 252, 0.32);
+      animation: pulseLine 2.4s ease-in-out infinite;
+      transform-origin: left;
+    }
+
+    .orbit-line-1 {
+      left: 19%;
+      top: 50%;
+      width: 62%;
+      height: 1px;
+      transform: rotate(-24deg);
+    }
+
+    .orbit-line-2 {
+      left: 48%;
+      top: 18%;
+      width: 1px;
+      height: 62%;
+      transform: rotate(18deg);
+      background: rgba(147, 197, 253, 0.25);
+    }
+
+    .orbit-core {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 80px;
+      height: 80px;
+      transform: translate(-50%, -50%);
+      border-radius: 999px;
+      border: 1px solid rgba(224, 242, 254, 0.35);
+      background: rgba(165, 243, 252, 0.05);
+    }
+
+    .orbit-node {
+      position: absolute;
+      left: 66%;
+      top: 35%;
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: var(--orange);
+      box-shadow: 0 0 30px rgba(255,138,61,0.55);
+    }
+
+    .orbit-caption {
+      position: absolute;
+      left: 40px;
+      bottom: 48px;
+      width: 250px;
+      color: #64748b;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+    }
+
+    .tag-strip {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.025);
+      padding: 20px 0;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .tag-list span,
+    .mini-tag {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: #94a3b8;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+      padding: 8px 13px;
+    }
+
+    .section {
+      padding: 96px 0;
+    }
+
+    .section.alt {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: #081018;
+    }
+
+    .section.soft {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.025);
+    }
+
+    .section-label {
+      max-width: 760px;
+      margin-bottom: 40px;
+    }
+
+    .section-label h2 {
+      margin-bottom: 18px;
+      color: #fff;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.04;
+      font-weight: 730;
+      letter-spacing: -0.055em;
+    }
+
+    .section-label p {
+      color: #cbd5e1;
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 0.78fr 1.22fr;
+      gap: 58px;
+    }
+
+    .about-copy {
+      color: #cbd5e1;
+      font-size: 18px;
+      line-height: 1.9;
+    }
+
+    .focus-grid,
+    .cv-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .focus-card,
+    .research-card,
+    .skill-card,
+    .cv-card,
+    .project-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+
+    .focus-card {
+      padding: 22px;
+    }
+
+    .focus-card .label,
+    .cv-card .label {
+      color: rgba(165,243,252,0.70);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+    }
+
+    .focus-card p:last-child {
+      margin-bottom: 0;
+      color: #fff;
+      font-weight: 650;
+    }
+
+    .research-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .research-card,
+    .skill-card,
+    .cv-card {
+      position: relative;
+      overflow: hidden;
+      padding: 27px;
+    }
+
+    .research-card .number {
+      color: rgba(165,243,252,0.67);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+    }
+
+    .research-card h3 {
+      margin: 52px 0 12px;
+      color: #fff;
+      font-size: 24px;
+      letter-spacing: -0.025em;
+    }
+
+    .research-card p,
+    .skill-card p,
+    .cv-card p {
+      color: #94a3b8;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .card-icon {
+      position: absolute;
+      right: 22px;
+      top: 22px;
+      color: rgba(165, 243, 252, 0.32);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .filter-button {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.035);
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 10px 14px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+    }
+
+    .filter-button:hover {
+      border-color: rgba(255,255,255,0.26);
+      color: #fff;
+    }
+
+    .filter-button.active {
+      border-color: rgba(165, 243, 252, 0.62);
+      background: rgba(165, 243, 252, 0.11);
+      color: #ecfeff;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .project-card {
+      overflow: hidden;
+      padding: 20px;
+      transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(165, 243, 252, 0.45);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .project-visual {
+      position: relative;
+      height: 176px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: #081018;
+    }
+
+    .project-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(142,234,255,0.08) 1px, transparent 1px),
+        linear-gradient(rgba(142,234,255,0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .project-visual::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 112px;
+      height: 112px;
+      transform: translate(-50%, -50%);
+      border-radius: 999px;
+      border: 1px solid rgba(165, 243, 252, 0.3);
+    }
+
+    .project-line {
+      position: absolute;
+      left: 18%;
+      top: 54%;
+      width: 68%;
+      height: 1px;
+      transform: rotate(-18deg);
+      background: rgba(165, 243, 252, 0.35);
+    }
+
+    .project-category {
+      position: absolute;
+      left: 17px;
+      bottom: 16px;
+      color: rgba(224, 242, 254, 0.62);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.26em;
+    }
+
+    .project-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .project-top h3 {
+      margin-bottom: 0;
+      color: #fff;
+      font-size: 21px;
+      line-height: 1.2;
+      letter-spacing: -0.025em;
+    }
+
+    .year {
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .project-summary {
+      margin: 12px 0 16px;
+      color: #cbd5e1;
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .tools {
+      margin-bottom: 18px;
+      color: #64748b;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .project-tags span {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: #94a3b8;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      padding: 5px 9px;
+    }
+
+    .lab-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 56px;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .skill-icon {
+      display: inline-flex;
+      width: 42px;
+      height: 42px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(165, 243, 252, 0.26);
+      border-radius: 999px;
+      color: var(--cyan);
+      margin-bottom: 28px;
+    }
+
+    .skill-card h3 {
+      color: #fff;
+      font-size: 21px;
+      letter-spacing: -0.02em;
+    }
+
+    .cv-card .label {
+      color: rgba(253, 186, 116, 0.72);
+    }
+
+    .cv-card p {
+      margin: 18px 0 0;
+      color: #cbd5e1;
+    }
+
+    .contact {
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid var(--line);
+      padding: 98px 0;
+    }
+
+    .contact::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(142,234,255,0.12), transparent 34%);
+      pointer-events: none;
+    }
+
+    .contact-inner {
+      position: relative;
+      max-width: 820px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .contact h2 {
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 1.02;
+      letter-spacing: -0.055em;
+    }
+
+    .contact p {
+      margin-inline: auto;
+      max-width: 680px;
+      color: #cbd5e1;
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      color: #64748b;
+      padding: 22px 0;
+      font-size: 13px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .cursor-ring,
+    .cursor-dot,
+    .trail-layer {
+      pointer-events: none;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 120;
+      display: none;
+    }
+
+    .trail-layer {
+      inset: 0;
+      z-index: 100;
+      mix-blend-mode: screen;
+    }
+
+    .trail-point {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--cyan);
+      transform: translate(-50%, -50%);
+      opacity: 0.18;
+      transition: opacity 180ms ease, transform 500ms ease;
+    }
+
+    .cursor-ring {
+      z-index: 110;
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+
+    .cursor-ring-inner {
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(165, 243, 252, 0.55);
+      border-radius: 999px;
+      transform: translate(-50%, -50%);
+      transition: width 180ms ease, height 180ms ease, border-color 180ms ease;
+      position: relative;
+    }
+
+    .cursor-ring-inner::before,
+    .cursor-ring-inner::after {
+      content: "";
+      position: absolute;
+      background: rgba(224, 242, 254, 0.72);
+    }
+
+    .cursor-ring-inner::before {
+      left: 50%;
+      top: -9px;
+      width: 1px;
+      height: 10px;
+      box-shadow: 0 45px 0 rgba(224, 242, 254, 0.72);
+    }
+
+    .cursor-ring-inner::after {
+      left: -9px;
+      top: 50%;
+      width: 10px;
+      height: 1px;
+      box-shadow: 45px 0 0 rgba(224, 242, 254, 0.72);
+    }
+
+    .cursor-dot {
+      z-index: 120;
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+
+    .cursor-dot-inner {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--cyan);
+      transform: translate(-50%, -50%);
+      position: relative;
+    }
+
+    .cursor-dot-inner::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 32px;
+      height: 1px;
+      background: rgba(224, 242, 254, 0.55);
+      transform-origin: left;
+      transform: rotate(28deg);
+    }
+
+    .cursor-label {
+      position: absolute;
+      left: 22px;
+      top: 10px;
+      border: 1px solid rgba(224, 242, 254, 0.36);
+      border-radius: 4px;
+      color: rgba(224, 242, 254, 0.72);
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      padding: 1px 5px;
+    }
+
+    body.cursor-active .cursor-ring-inner {
+      width: 56px;
+      height: 56px;
+      border-color: rgba(253, 186, 116, 0.82);
+    }
+
+    body.cursor-active .cursor-dot-inner {
+      width: 12px;
+      height: 12px;
+      background: var(--orange);
+    }
+
+    @media (pointer: fine) {
+      body,
+      body * {
+        cursor: none !important;
+      }
+      .cursor-ring,
+      .cursor-dot,
+      .trail-layer {
+        display: block;
+      }
+    }
+
+    @keyframes orbitSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulseLine {
+      0%, 100% { opacity: .25; scale: .85 1; }
+      50% { opacity: .75; scale: 1 1; }
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .about-grid,
+      .lab-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .research-grid,
+      .project-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .orbital-card {
+        max-width: 390px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .container {
+        width: min(100% - 30px, var(--max));
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+      }
+
+      .mobile-menu.open {
+        display: block;
+      }
+
+      .hero {
+        padding-top: 118px;
+      }
+
+      .hero-grid {
+        gap: 40px;
+      }
+
+      h1 {
+        font-size: clamp(44px, 14vw, 68px);
+      }
+
+      .section {
+        padding: 74px 0;
+      }
+
+      .focus-grid,
+      .research-grid,
+      .project-grid,
+      .skills-grid,
+      .cv-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .orbital-card {
+        max-width: 330px;
+      }
+
+      .orbit-caption {
+        left: 30px;
+        bottom: 34px;
+        width: 210px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="trail-layer" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"><div class="cursor-ring-inner"></div></div>
+  <div class="cursor-dot" aria-hidden="true"><div class="cursor-dot-inner"><span class="cursor-label">tcp</span></div></div>
+
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="#home" class="brand" data-cursor="interactive">
+        <span class="brand-mark"><span class="brand-dot"></span></span>
+        <span>
+          <span class="brand-title">Bahar Bagheri</span>
+          <span class="brand-subtitle mono">Robotic Atlas</span>
+        </span>
+      </a>
+
+      <div class="nav-links" aria-label="Primary navigation">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#research">Research</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#experiments">Experiments</a>
+        <a href="#cv">CV</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" data-cursor="interactive">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+      </button>
+    </nav>
+
+    <div class="mobile-menu">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#experiments">Experiments</a>
+      <a href="#cv">CV</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <canvas id="hero-canvas" aria-hidden="true"></canvas>
+      <div class="hero-overlay"></div>
+
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow mono">Computational design / robotic construction</p>
+          <h1>
+            Bahar Bagheri
+            <span class="gradient-text">designs through code, tools, and robotic motion.</span>
+          </h1>
+          <p class="hero-copy">
+            I work at the intersection of architecture, computation, programming, and robotic fabrication,
+            exploring how intelligent construction systems can reshape the way we design and build.
+          </p>
+
+          <div class="button-row">
+            <a class="button" href="#research" data-cursor="interactive">Explore Research <span aria-hidden="true">→</span></a>
+            <a class="button secondary" href="#portfolio" data-cursor="interactive">View Portfolio <span aria-hidden="true">→</span></a>
+            <a class="button download" href="#cv" data-cursor="interactive">Download CV <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+
+        <div class="orbital-card" aria-hidden="true">
+          <span class="orbit-line-1"></span>
+          <span class="orbit-line-2"></span>
+          <span class="orbit-core"></span>
+          <span class="orbit-node"></span>
+          <span class="orbit-caption mono">End-effector workspace / construction logic</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="tag-strip">
+      <div class="container tag-list mono">
+        <span>Architecture</span>
+        <span>Computational Design</span>
+        <span>Robotic Arms</span>
+        <span>Construction Automation</span>
+        <span>Programming</span>
+        <span>Digital Fabrication</span>
+        <span>Spatial Systems</span>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <div class="container about-grid">
+        <div class="section-label">
+          <p class="eyebrow mono">About</p>
+          <h2>Architecture as foundation. Computation as method. Robotics as frontier.</h2>
+        </div>
+
+        <div class="about-copy">
+          <p>
+            With an architectural foundation and a master’s degree in Computational Design from the University of Tehran,
+            Bahar Bagheri is currently pursuing interdisciplinary research at Texas Tech University focused on robotic arms in construction.
+          </p>
+          <p>
+            Her work connects spatial design, code, fabrication logic, and automation to investigate new ways of thinking about construction systems.
+            Rather than treating technology as a visual layer, she approaches computation as a design method for geometry, behavior, material logic, and robotic action.
+          </p>
+
+          <div class="focus-grid">
+            <div class="focus-card">
+              <p class="label mono">Focus</p>
+              <p>Design logic</p>
+            </div>
+            <div class="focus-card">
+              <p class="label mono">Focus</p>
+              <p>Code workflows</p>
+            </div>
+            <div class="focus-card">
+              <p class="label mono">Focus</p>
+              <p>Robotic fabrication</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="research" class="section alt">
+      <div class="container">
+        <div class="section-label">
+          <p class="eyebrow mono">Research</p>
+          <h2>Robotic construction systems</h2>
+          <p>
+            Bahar’s research investigates how robotic arms, computational design workflows, and construction logic can converge
+            to create more intelligent, precise, and adaptive fabrication systems.
+          </p>
+        </div>
+
+        <div class="research-grid">
+          <article class="research-card" data-cursor="interactive">
+            <span class="number mono">01</span>
+            <span class="card-icon" aria-hidden="true">◎</span>
+            <h3>Geometry</h3>
+            <p>Spatial inputs and architectural systems are translated into computational relationships.</p>
+          </article>
+          <article class="research-card" data-cursor="interactive">
+            <span class="number mono">02</span>
+            <span class="card-icon" aria-hidden="true">◎</span>
+            <h3>Parameters</h3>
+            <p>Design variables define constraints, fabrication logic, and construction sequencing.</p>
+          </article>
+          <article class="research-card" data-cursor="interactive">
+            <span class="number mono">03</span>
+            <span class="card-icon" aria-hidden="true">◎</span>
+            <h3>Toolpath</h3>
+            <p>Curves, paths, and motion data become fabrication-aware robotic instructions.</p>
+          </article>
+          <article class="research-card" data-cursor="interactive">
+            <span class="number mono">04</span>
+            <span class="card-icon" aria-hidden="true">◎</span>
+            <h3>Robotic Motion</h3>
+            <p>Robotic arms execute programmable spatial actions within construction workflows.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="portfolio" class="section">
+      <div class="container">
+        <div class="section-label">
+          <p class="eyebrow mono">Portfolio</p>
+          <h2>Selected work across design systems, fabrication, and code.</h2>
+          <p>
+            Each project is presented as both a visual artifact and a technical process, documenting concepts, tools, workflows, and decisions behind the work.
+          </p>
+        </div>
+
+        <div class="filters mono" aria-label="Project filters">
+          <button class="filter-button active" type="button" data-filter="All" data-cursor="interactive">All</button>
+          <button class="filter-button" type="button" data-filter="Robotics" data-cursor="interactive">Robotics</button>
+          <button class="filter-button" type="button" data-filter="Computational Design" data-cursor="interactive">Computational Design</button>
+          <button class="filter-button" type="button" data-filter="Architecture" data-cursor="interactive">Architecture</button>
+          <button class="filter-button" type="button" data-filter="Programming" data-cursor="interactive">Programming</button>
+          <button class="filter-button" type="button" data-filter="Research" data-cursor="interactive">Research</button>
+          <button class="filter-button" type="button" data-filter="Fabrication" data-cursor="interactive">Fabrication</button>
+        </div>
+
+        <div class="project-grid" id="project-grid"></div>
+      </div>
+    </section>
+
+    <section id="experiments" class="section soft">
+      <div class="container lab-grid">
+        <div class="section-label">
+          <p class="eyebrow mono">Interactive Lab</p>
+          <h2>Small studies, live questions, and computational sketches.</h2>
+          <p>
+            A lab-like space for robotic path visualizations, generative geometry, simulation studies, construction sequencing diagrams, and code-based spatial experiments.
+          </p>
+        </div>
+
+        <div class="skills-grid">
+          <article class="skill-card" data-cursor="interactive">
+            <span class="skill-icon">▦</span>
+            <h3>Architecture</h3>
+            <p>Spatial systems, design logic, representation</p>
+          </article>
+          <article class="skill-card" data-cursor="interactive">
+            <span class="skill-icon">▦</span>
+            <h3>Computation</h3>
+            <p>Parametric models, algorithms, generative workflows</p>
+          </article>
+          <article class="skill-card" data-cursor="interactive">
+            <span class="skill-icon">▦</span>
+            <h3>Robotics</h3>
+            <p>End-effector paths, automation, construction systems</p>
+          </article>
+          <article class="skill-card" data-cursor="interactive">
+            <span class="skill-icon">▦</span>
+            <h3>Programming</h3>
+            <p>Python, creative coding, interface thinking</p>
+          </article>
+          <article class="skill-card" data-cursor="interactive">
+            <span class="skill-icon">▦</span>
+            <h3>Fabrication</h3>
+            <p>Toolpaths, material logic, digital production</p>
+          </article>
+          <article class="skill-card" data-cursor="interactive">
+            <span class="skill-icon">▦</span>
+            <h3>Research</h3>
+            <p>Academic questions, methods, documentation</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="cv" class="section">
+      <div class="container">
+        <div class="section-label">
+          <p class="eyebrow mono">CV</p>
+          <h2>Academic profile and technical range.</h2>
+          <p>
+            A concise overview of education, research interests, technical skills, design background, selected projects, and academic development.
+          </p>
+        </div>
+
+        <div class="cv-grid">
+          <article class="cv-card">
+            <p class="label mono">Education</p>
+            <p>Architecture, University of Tehran · Computational Design, University of Tehran · Interdisciplinary Studies, Texas Tech University</p>
+          </article>
+          <article class="cv-card">
+            <p class="label mono">Research Interests</p>
+            <p>Robotic construction, computational workflows, digital fabrication, automation, toolpath design, spatial systems</p>
+          </article>
+          <article class="cv-card">
+            <p class="label mono">Technical Skills</p>
+            <p>Rhino, Grasshopper, Python, simulation workflows, creative coding, visualization, research documentation</p>
+          </article>
+        </div>
+
+        <div class="button-row">
+          <a class="button download" href="#contact" data-cursor="interactive">Request / Download CV <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact">
+      <div class="container contact-inner">
+        <p class="eyebrow mono">Contact</p>
+        <h2>Let’s connect around computation, robotics, and construction.</h2>
+        <p>
+          Open to research collaborations, computational design projects, robotic fabrication inquiries, and interdisciplinary academic opportunities.
+        </p>
+        <div class="button-row" style="justify-content: center;">
+          <a class="button" href="mailto:hello@example.com" data-cursor="interactive">Email Bahar <span aria-hidden="true">→</span></a>
+          <a class="button secondary" href="#portfolio" data-cursor="interactive">View Work <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> Bahar Bagheri</span>
+      <span class="mono">Computational Design / Robotic Construction</span>
+    </div>
+  </footer>
+
+  <script>
+    const projects = [
+      {
+        title: "Robotic Toolpath Study",
+        category: "Robotics",
+        year: "2026",
+        tools: "Robot simulation, Python, Rhino",
+        summary: "A fabrication-aware study of robotic end-effector motion, path sequencing, and spatial precision.",
+        tags: ["Robotics", "Toolpaths", "Construction"]
+      },
+      {
+        title: "Parametric Assembly Logic",
+        category: "Computational Design",
+        year: "2025",
+        tools: "Grasshopper, Rhino, Python",
+        summary: "A computational system for studying repeatable assembly units and construction-oriented geometry.",
+        tags: ["Parametric", "Assembly", "Geometry"]
+      },
+      {
+        title: "Spatial Systems Archive",
+        category: "Architecture",
+        year: "2024",
+        tools: "Rhino, Adobe Suite, Diagrams",
+        summary: "Architectural explorations translated into structured diagrams, sectional systems, and spatial logic.",
+        tags: ["Architecture", "Systems", "Diagrams"]
+      },
+      {
+        title: "Construction Sequence Model",
+        category: "Research",
+        year: "2026",
+        tools: "Simulation, Computational workflow",
+        summary: "A research prototype connecting computational design inputs to programmable construction decisions.",
+        tags: ["Research", "Automation", "Workflow"]
+      },
+      {
+        title: "Generative Fabrication Field",
+        category: "Fabrication",
+        year: "2025",
+        tools: "Creative coding, geometry processing",
+        summary: "A visual and technical experiment in coded material paths, gradient density, and fabrication constraints.",
+        tags: ["Fabrication", "Coding", "Material"]
+      },
+      {
+        title: "Robotics Data Interface",
+        category: "Programming",
+        year: "2026",
+        tools: "React, Canvas, data visualization",
+        summary: "A minimal interface concept for showing coordinates, motion status, and robotic fabrication metadata.",
+        tags: ["Programming", "Interface", "Data"]
+      }
+    ];
+
+    const projectGrid = document.querySelector("#project-grid");
+    const filterButtons = document.querySelectorAll(".filter-button");
+
+    function renderProjects(filter = "All") {
+      const filtered = filter === "All"
+        ? projects
+        : projects.filter(project => project.category === filter || project.tags.includes(filter));
+
+      projectGrid.innerHTML = filtered.map(project => `
+        <article class="project-card" data-cursor="interactive">
+          <div class="project-visual">
+            <span class="project-line"></span>
+            <span class="project-category mono">${project.category}</span>
+          </div>
+          <div class="project-top">
+            <h3>${project.title}</h3>
+            <span class="year mono">${project.year}</span>
+          </div>
+          <p class="project-summary">${project.summary}</p>
+          <p class="tools mono">${project.tools}</p>
+          <div class="project-tags mono">
+            ${project.tags.map(tag => `<span>${tag}</span>`).join("")}
+          </div>
+        </article>
+      `).join("");
+    }
+
+    filterButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        filterButtons.forEach(item => item.classList.remove("active"));
+        button.classList.add("active");
+        renderProjects(button.dataset.filter);
+      });
+    });
+
+    renderProjects();
+
+    const menuToggle = document.querySelector(".menu-toggle");
+    const mobileMenu = document.querySelector(".mobile-menu");
+
+    menuToggle.addEventListener("click", () => {
+      const isOpen = mobileMenu.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    mobileMenu.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        mobileMenu.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    document.querySelector("#year").textContent = new Date().getFullYear();
+
+    // Animated hero canvas
+    const canvas = document.querySelector("#hero-canvas");
+    const context = canvas.getContext("2d");
+    let width = 0;
+    let height = 0;
+    let frame = 0;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function resizeCanvas() {
+      const ratio = window.devicePixelRatio || 1;
+      width = canvas.offsetWidth;
+      height = canvas.offsetHeight;
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    }
+
+    function drawGrid() {
+      context.strokeStyle = "rgba(142,234,255,0.055)";
+      context.lineWidth = 1;
+      const step = 46;
+      for (let x = 0; x < width; x += step) {
+        context.beginPath();
+        context.moveTo(x, 0);
+        context.lineTo(x, height);
+        context.stroke();
+      }
+      for (let y = 0; y < height; y += step) {
+        context.beginPath();
+        context.moveTo(0, y);
+        context.lineTo(width, y);
+        context.stroke();
+      }
+    }
+
+    function drawPath(offset, color, alpha, lineWidth) {
+      context.beginPath();
+      for (let i = 0; i < 170; i += 1) {
+        const t = i / 169;
+        const x = width * (0.08 + t * 0.84);
+        const y = height * 0.48 + Math.sin(t * Math.PI * 3.6 + offset) * 82 + Math.cos(t * Math.PI * 7 + offset * 0.7) * 22;
+        if (i === 0) context.moveTo(x, y);
+        else context.lineTo(x, y);
+      }
+      context.strokeStyle = color.replace("ALPHA", alpha);
+      context.lineWidth = lineWidth;
+      context.stroke();
+    }
+
+    function drawHero() {
+      context.clearRect(0, 0, width, height);
+      context.fillStyle = "rgba(5,6,8,0.98)";
+      context.fillRect(0, 0, width, height);
+      drawGrid();
+
+      const time = frame * 0.012;
+      drawPath(time, "rgba(142,234,255,ALPHA)", 0.32, 1.2);
+      drawPath(time + 1.8, "rgba(110,140,255,ALPHA)", 0.18, 1);
+      drawPath(time + 3.2, "rgba(255,138,61,ALPHA)", 0.14, 0.9);
+
+      const cx = width * 0.72 + Math.cos(time) * 70;
+      const cy = height * 0.48 + Math.sin(time * 0.8) * 60;
+      context.strokeStyle = "rgba(255,255,255,0.16)";
+      context.beginPath();
+      context.arc(cx, cy, 56, 0, Math.PI * 2);
+      context.stroke();
+
+      context.fillStyle = "rgba(142,234,255,0.75)";
+      context.beginPath();
+      context.arc(cx, cy, 3, 0, Math.PI * 2);
+      context.fill();
+
+      context.fillStyle = "rgba(200,205,212,0.62)";
+      context.font = "10px ui-monospace, SFMono-Regular, Menlo, monospace";
+      context.fillText("TCP_PATH / ROBOTIC_ATLAS", 26, 34);
+      context.fillText("X: 07.41  Y: 12.08  Z: 03.16", 26, 52);
+
+      if (!reducedMotion) frame += 1;
+      requestAnimationFrame(drawHero);
+    }
+
+    resizeCanvas();
+    drawHero();
+    window.addEventListener("resize", resizeCanvas);
+
+    // Custom cursor
+    const trailLayer = document.querySelector(".trail-layer");
+    const cursorRing = document.querySelector(".cursor-ring");
+    const cursorDot = document.querySelector(".cursor-dot");
+    const cursorLabel = document.querySelector(".cursor-label");
+    const isFinePointer = window.matchMedia("(pointer: fine)").matches;
+    const position = { x: -100, y: -100 };
+    const smooth = { x: -100, y: -100 };
+    let lastTrail = 0;
+
+    if (isFinePointer) {
+      window.addEventListener("mousemove", event => {
+        position.x = event.clientX;
+        position.y = event.clientY;
+        cursorRing.style.opacity = "1";
+        cursorDot.style.opacity = "1";
+
+        const element = document.elementFromPoint(event.clientX, event.clientY);
+        const active = Boolean(element && element.closest("a, button, input, textarea, select, [data-cursor='interactive']"));
+        document.body.classList.toggle("cursor-active", active);
+        cursorLabel.textContent = active ? "lock" : "tcp";
+
+        const now = performance.now();
+        if (now - lastTrail > 34) {
+          lastTrail = now;
+          const point = document.createElement("span");
+          point.className = "trail-point";
+          point.style.left = event.clientX + "px";
+          point.style.top = event.clientY + "px";
+          trailLayer.prepend(point);
+          window.setTimeout(() => {
+            point.style.opacity = "0";
+            point.style.transform = "translate(-50%, -50%) scale(0.4)";
+          }, 20);
+          window.setTimeout(() => point.remove(), 650);
+        }
+      });
+
+      window.addEventListener("mouseleave", () => {
+        cursorRing.style.opacity = "0";
+        cursorDot.style.opacity = "0";
+      });
+
+      function animateCursor() {
+        smooth.x += (position.x - smooth.x) * 0.22;
+        smooth.y += (position.y - smooth.y) * 0.22;
+        cursorDot.style.transform = `translate3d(${smooth.x}px, ${smooth.y}px, 0)`;
+        cursorRing.style.transform = `translate3d(${position.x}px, ${position.y}px, 0)`;
+        requestAnimationFrame(animateCursor);
+      }
+      animateCursor();
+    }
+  </script>
+</body>
+</html>
