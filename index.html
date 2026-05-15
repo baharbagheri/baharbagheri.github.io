@@ -1,6 +1,4 @@
-from pathlib import Path
-
-html = r'''<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -9,19 +7,17 @@ html = r'''<!DOCTYPE html>
   <style>
     :root {
       --bg: #050608;
-      --panel: rgba(255,255,255,0.035);
-      --panel-strong: #081018;
-      --line: rgba(255,255,255,0.10);
-      --line-soft: rgba(255,255,255,0.15);
-      --cyan: #8eeaff;
-      --cyan-soft: rgba(142,234,255,0.55);
-      --orange: #ff8a3d;
+      --panel: #070b10;
+      --panel-2: #081018;
       --text: #f8fafc;
       --muted: #94a3b8;
       --muted-2: #64748b;
-      --slate: #cbd5e1;
-      --radius-xl: 2rem;
-      --max: 1280px;
+      --line: rgba(255, 255, 255, 0.1);
+      --line-2: rgba(255, 255, 255, 0.14);
+      --cyan: #8eeaff;
+      --cyan-soft: rgba(142, 234, 255, 0.2);
+      --orange: #ffae63;
+      --orange-strong: #ff8a3d;
     }
 
     * {
@@ -37,10 +33,10 @@ html = r'''<!DOCTYPE html>
       background: var(--bg);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.5;
+      overflow-x: hidden;
     }
 
-    ::selection {
+    body::selection {
       background: var(--cyan);
       color: #000;
     }
@@ -54,24 +50,52 @@ html = r'''<!DOCTYPE html>
       font: inherit;
     }
 
-    .font-mono {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    }
-
-    .site {
-      min-height: 100vh;
-      overflow-x: hidden;
-      background:
-        radial-gradient(circle at 15% 8%, rgba(255,138,61,0.06), transparent 24%),
-        radial-gradient(circle at 88% 5%, rgba(142,234,255,0.07), transparent 28%),
-        var(--bg);
-    }
-
     @media (pointer: fine) {
-      .site,
-      .site * {
+      body,
+      body * {
         cursor: none !important;
       }
+    }
+
+    .site-shell {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 70% 25%, rgba(142, 234, 255, 0.12), transparent 32%),
+        radial-gradient(circle at 20% 80%, rgba(255, 138, 61, 0.1), transparent 28%),
+        #050608;
+    }
+
+    .container {
+      width: min(100% - 40px, 1280px);
+      margin-inline: auto;
+    }
+
+    .fixed-glow {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(255, 138, 61, 0.08), transparent 24%),
+        radial-gradient(circle at 90% 8%, rgba(142, 234, 255, 0.09), transparent 30%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 45%);
+    }
+
+    .scanline {
+      pointer-events: none;
+      position: fixed;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      height: 1px;
+      background: rgba(142, 234, 255, 0.2);
+      animation: scan 7s linear infinite;
+    }
+
+    @keyframes scan {
+      0% { transform: translateY(-100%); opacity: 0; }
+      15% { opacity: 0.7; }
+      100% { transform: translateY(100vh); opacity: 0; }
     }
 
     @keyframes orbitSpin {
@@ -80,159 +104,150 @@ html = r'''<!DOCTYPE html>
     }
 
     @keyframes pulseLine {
-      0%, 100% {
-        opacity: .25;
-        transform: scaleX(.85);
+      0%, 100% { opacity: 0.25; transform: scaleX(0.85); }
+      50% { opacity: 0.75; transform: scaleX(1); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation: none !important;
+        transition-duration: 0ms !important;
       }
-      50% {
-        opacity: .75;
-        transform: scaleX(1);
-      }
     }
 
-    .spin-slow {
-      animation: orbitSpin 18s linear infinite;
-    }
-
-    .pulse-line {
-      animation: pulseLine 2.4s ease-in-out infinite;
-      transform-origin: left;
-    }
-
-    .container {
-      width: min(100% - 40px, var(--max));
-      margin-inline: auto;
-    }
-
-    /* Custom cursor */
-    .cursor-trail {
-      pointer-events: none;
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: none;
-      mix-blend-mode: screen;
-    }
-
-    .cursor-trail span {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: var(--cyan);
-      transform: translate(-50%, -50%);
-      transition: opacity 180ms ease, transform 500ms ease;
-    }
-
+    /* TCP cursor */
+    .cursor-trail,
     .cursor-ring,
     .cursor-dot {
       pointer-events: none;
       position: fixed;
       left: 0;
       top: 0;
-      z-index: 110;
       display: none;
       opacity: 0;
+      z-index: 120;
       transition: opacity 180ms ease;
     }
 
-    .cursor-dot {
-      z-index: 120;
+    .cursor-trail {
+      inset: 0;
+      z-index: 100;
+      mix-blend-mode: screen;
     }
 
-    .cursor-ring.is-visible,
-    .cursor-dot.is-visible {
-      opacity: 1;
+    .trail-point {
+      position: absolute;
+      height: 6px;
+      width: 6px;
+      border-radius: 999px;
+      background: var(--cyan);
+      transform: translate(-50%, -50%);
     }
 
-    .cursor-ring-inner {
+    .ring-shape {
       position: relative;
       width: 36px;
       height: 36px;
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(142,234,255,0.55);
+      border: 1px solid rgba(142, 234, 255, 0.55);
       border-radius: 999px;
-      transition: height 180ms ease, width 180ms ease, border-color 180ms ease;
+      transform: translate(-50%, -50%);
+      transition: width 180ms ease, height 180ms ease, border-color 180ms ease;
     }
 
-    .cursor-ring.is-active .cursor-ring-inner {
-      width: 56px;
-      height: 56px;
-      border-color: rgba(255,138,61,0.80);
-    }
-
-    .cursor-ring-inner i {
+    .ring-shape::before,
+    .ring-shape::after,
+    .ring-shape span::before,
+    .ring-shape span::after {
+      content: "";
       position: absolute;
-      display: block;
-      background: rgba(207,250,254,0.70);
+      background: rgba(207, 250, 254, 0.7);
     }
 
-    .cursor-ring-inner i:nth-child(1),
-    .cursor-ring-inner i:nth-child(2) {
+    .ring-shape::before {
       left: 50%;
+      top: -9px;
       width: 1px;
       height: 10px;
       transform: translateX(-50%);
     }
 
-    .cursor-ring-inner i:nth-child(1) { top: -9px; }
-    .cursor-ring-inner i:nth-child(2) { bottom: -9px; }
+    .ring-shape::after {
+      left: 50%;
+      bottom: -9px;
+      width: 1px;
+      height: 10px;
+      transform: translateX(-50%);
+    }
 
-    .cursor-ring-inner i:nth-child(3),
-    .cursor-ring-inner i:nth-child(4) {
+    .ring-shape span::before {
+      left: -9px;
       top: 50%;
       width: 10px;
       height: 1px;
       transform: translateY(-50%);
     }
 
-    .cursor-ring-inner i:nth-child(3) { left: -9px; }
-    .cursor-ring-inner i:nth-child(4) { right: -9px; }
+    .ring-shape span::after {
+      right: -9px;
+      top: 50%;
+      width: 10px;
+      height: 1px;
+      transform: translateY(-50%);
+    }
 
-    .cursor-dot-inner {
+    .cursor-active .ring-shape {
+      width: 56px;
+      height: 56px;
+      border-color: rgba(255, 174, 99, 0.8);
+    }
+
+    .dot-shape {
       position: relative;
       transform: translate(-50%, -50%);
     }
 
-    .cursor-core {
+    .dot-core {
       display: block;
-      width: 10px;
       height: 10px;
+      width: 10px;
       border-radius: 999px;
       background: #cffafe;
     }
 
-    .cursor-dot.is-active .cursor-core {
-      width: 12px;
+    .cursor-active .dot-core {
       height: 12px;
+      width: 12px;
       background: var(--orange);
     }
 
-    .cursor-ray {
+    .dot-line {
       position: absolute;
       left: 50%;
       top: 50%;
-      height: 1px;
       width: 32px;
+      height: 1px;
       transform-origin: left;
       transform: rotate(28deg);
-      background: rgba(207,250,254,0.55);
+      background: rgba(207, 250, 254, 0.55);
     }
 
-    .cursor-label {
+    .dot-label {
       position: absolute;
       left: 23px;
       top: 13px;
-      border: 1px solid rgba(207,250,254,0.35);
+      border: 1px solid rgba(207, 250, 254, 0.35);
       border-radius: 4px;
       padding: 2px 6px;
-      color: rgba(207,250,254,0.70);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 8px;
+      letter-spacing: 0.24em;
       text-transform: uppercase;
-      letter-spacing: .24em;
+      color: rgba(207, 250, 254, 0.7);
+      background: rgba(5, 6, 8, 0.3);
     }
 
-    @media (min-width: 768px) {
+    @media (pointer: fine) and (min-width: 768px) {
       .cursor-trail,
       .cursor-ring,
       .cursor-dot {
@@ -241,20 +256,21 @@ html = r'''<!DOCTYPE html>
     }
 
     /* Header */
-    .header {
+    .site-header {
       position: fixed;
-      inset: 0 0 auto;
+      inset: 0 0 auto 0;
       z-index: 50;
       border-bottom: 1px solid var(--line);
-      background: rgba(5,6,8,0.82);
-      backdrop-filter: blur(20px);
+      background: rgba(5, 6, 8, 0.82);
+      backdrop-filter: blur(18px);
     }
 
     .nav {
+      min-height: 72px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 20px;
+      gap: 24px;
     }
 
     .brand {
@@ -262,6 +278,7 @@ html = r'''<!DOCTYPE html>
       grid-template-columns: 42px 1fr;
       align-items: center;
       gap: 12px;
+      min-width: 255px;
     }
 
     .brand-mark {
@@ -270,7 +287,7 @@ html = r'''<!DOCTYPE html>
       width: 40px;
       height: 40px;
       place-items: center;
-      border: 1px solid rgba(142,234,255,0.35);
+      border: 1px solid rgba(142, 234, 255, 0.35);
       color: #cffafe;
       font-size: 14px;
       font-weight: 700;
@@ -289,265 +306,185 @@ html = r'''<!DOCTYPE html>
 
     .brand-name {
       display: block;
+      color: white;
       font-size: 14px;
       font-weight: 700;
-      letter-spacing: .02em;
-      color: white;
+      letter-spacing: 0.02em;
     }
 
     .brand-subtitle {
       display: block;
-      margin-top: 1px;
+      margin-top: 2px;
       color: var(--muted-2);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 10px;
+      letter-spacing: 0.25em;
       text-transform: uppercase;
-      letter-spacing: .25em;
       transition: color 180ms ease;
     }
 
     .brand:hover .brand-subtitle {
-      color: #fed7aa;
+      color: var(--orange);
     }
 
     .nav-links {
-      display: none;
+      display: flex;
       align-items: center;
+      gap: 0;
     }
 
-    .nav-links a {
-      border-left: 1px solid rgba(255,255,255,0.10);
-      padding: 8px 16px;
-      color: #94a3b8;
+    .nav-link {
+      position: relative;
+      border-left: 1px solid var(--line);
+      padding: 10px 16px;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 11px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      letter-spacing: .18em;
-      transition: background 180ms ease, color 180ms ease;
+      transition: color 180ms ease, background 180ms ease;
+      white-space: nowrap;
     }
 
-    .nav-links a:hover {
-      background: rgba(142,234,255,0.05);
+    .nav-link:hover {
       color: #cffafe;
+      background: rgba(142, 234, 255, 0.05);
     }
 
-    .nav-index {
+    .nav-number {
       margin-right: 8px;
       color: #475569;
     }
 
     .menu-toggle {
-      border: 1px solid rgba(255,255,255,0.15);
+      display: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
       background: transparent;
-      padding: 8px 12px;
       color: #e2e8f0;
+      padding: 9px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      letter-spacing: .22em;
     }
 
     .mobile-menu {
       display: none;
       border-top: 1px solid var(--line);
-      background: rgba(5,6,8,0.95);
+      background: rgba(5, 6, 8, 0.95);
       padding: 12px 20px 20px;
-    }
-
-    .mobile-menu.is-open {
-      display: block;
     }
 
     .mobile-menu-inner {
       display: grid;
       gap: 4px;
-      width: min(100%, var(--max));
-      margin: 0 auto;
     }
 
     .mobile-menu a {
-      border: 1px solid rgba(255,255,255,0.10);
-      padding: 12px 16px;
+      border: 1px solid var(--line);
+      padding: 13px 16px;
       color: #cbd5e1;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      letter-spacing: .20em;
     }
 
-    @media (min-width: 1024px) {
-      .nav {
-        padding-inline: 32px;
-      }
-
+    @media (max-width: 1060px) {
       .nav-links {
-        display: flex;
+        display: none;
       }
 
       .menu-toggle {
-        display: none;
+        display: inline-flex;
+      }
+
+      .mobile-menu.is-open {
+        display: block;
       }
     }
 
-    /* Shared */
-    main {
-      position: relative;
-      z-index: 1;
-    }
+    @media (max-width: 520px) {
+      .container {
+        width: min(100% - 28px, 1280px);
+      }
 
-    .section {
-      padding: 96px 0;
-    }
+      .brand {
+        min-width: 0;
+      }
 
-    .section.border-y {
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .section-label {
-      max-width: 768px;
-      margin-bottom: 40px;
-    }
-
-    .eyebrow {
-      margin: 0 0 12px;
-      color: rgba(142,234,255,0.70);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .35em;
-    }
-
-    .section-title {
-      margin: 0;
-      color: white;
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      line-height: 1.02;
-      font-weight: 700;
-      letter-spacing: -0.04em;
-    }
-
-    .section-label p:not(.eyebrow) {
-      margin: 20px 0 0;
-      color: #cbd5e1;
-      font-size: clamp(1rem, 2vw, 1.125rem);
-      line-height: 1.8;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid rgba(142,234,255,0.45);
-      border-radius: 999px;
-      background: rgba(142,234,255,0.10);
-      padding: 12px 20px;
-      color: #f0fdff;
-      font-size: 14px;
-      font-weight: 600;
-      transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
-    }
-
-    .btn:hover {
-      border-color: #cffafe;
-      background: rgba(142,234,255,0.15);
-    }
-
-    .btn.secondary,
-    .btn.download {
-      border-color: rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.03);
-      color: #e2e8f0;
-    }
-
-    .btn.secondary:hover,
-    .btn.download:hover {
-      border-color: rgba(254,215,170,0.50);
-      color: #fed7aa;
-    }
-
-    .btn svg {
-      width: 16px;
-      height: 16px;
-      transition: transform 180ms ease;
-    }
-
-    .btn:hover svg {
-      transform: translateX(4px);
-    }
-
-    .icon {
-      width: 16px;
-      height: 16px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.7;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      .brand-subtitle {
+        letter-spacing: 0.18em;
+      }
     }
 
     /* Hero */
     .hero {
       position: relative;
-      display: flex;
       min-height: 100vh;
+      display: flex;
       align-items: center;
       overflow: hidden;
-      padding: 112px 20px 0;
+      padding-top: 112px;
     }
 
-    #hero-canvas {
+    #heroCanvas {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      opacity: .8;
+      opacity: 0.8;
     }
 
-    .hero-overlay {
+    .hero::after {
+      content: "";
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(circle at 70% 25%, rgba(142,234,255,0.12), transparent 32%),
-        radial-gradient(circle at 20% 80%, rgba(255,138,61,0.10), transparent 28%),
-        linear-gradient(to bottom, rgba(5,6,8,0.25), #050608);
+      background: linear-gradient(to bottom, rgba(5, 6, 8, 0.25), #050608);
     }
 
     .hero-grid {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       display: grid;
-      align-items: center;
+      grid-template-columns: 1.1fr 0.9fr;
       gap: 48px;
-      padding: 80px 0;
+      align-items: center;
+      padding-block: 80px;
     }
 
     .hero-kicker {
       margin: 0 0 20px;
-      color: rgba(142,234,255,0.75);
+      color: rgba(142, 234, 255, 0.75);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
+      letter-spacing: 0.45em;
       text-transform: uppercase;
-      letter-spacing: .45em;
     }
 
-    .hero-title {
-      max-width: 1040px;
+    .hero h1 {
+      max-width: 980px;
       margin: 0;
-      color: white;
-      font-size: clamp(3.35rem, 10vw, 8rem);
-      line-height: .95;
-      letter-spacing: -0.07em;
+      font-size: clamp(3.25rem, 7.5vw, 8rem);
+      line-height: 0.95;
+      letter-spacing: -0.075em;
+      font-weight: 700;
     }
 
     .gradient-text {
       display: block;
+      color: transparent;
       background: linear-gradient(90deg, #cffafe, #f8fafc, #fed7aa);
       -webkit-background-clip: text;
       background-clip: text;
-      color: transparent;
     }
 
-    .hero-description {
-      max-width: 672px;
-      margin: 32px 0 0;
+    .hero-copy {
+      max-width: 680px;
+      margin: 30px 0 0;
       color: #cbd5e1;
-      font-size: clamp(1.125rem, 2vw, 1.25rem);
-      line-height: 1.75;
+      font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+      line-height: 1.7;
     }
 
     .hero-actions {
@@ -557,547 +494,675 @@ html = r'''<!DOCTYPE html>
       margin-top: 36px;
     }
 
-    .orb {
+    .vector-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.2);
+      color: #e2e8f0;
+      padding: 13px 20px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+      transition: color 200ms ease, border-color 200ms ease, background 200ms ease;
+    }
+
+    .vector-button.primary {
+      border-color: var(--cyan);
+      background: var(--cyan);
+      color: #000;
+    }
+
+    .vector-button::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 0;
+      background: rgba(255, 174, 99, 0.25);
+      transition: width 300ms ease;
+    }
+
+    .vector-button span {
+      position: relative;
+      z-index: 2;
+    }
+
+    .vector-button:hover {
+      border-color: rgba(255, 174, 99, 0.72);
+      color: white;
+    }
+
+    .vector-button.primary:hover {
+      background: white;
+      color: black;
+    }
+
+    .vector-button:hover::before {
+      width: 100%;
+    }
+
+    .orbital-preview {
       position: relative;
       width: min(100%, 460px);
       aspect-ratio: 1;
-      margin: 0 auto;
-      border: 1px solid rgba(255,255,255,0.10);
+      margin-left: auto;
+      border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255,255,255,0.025);
-      box-shadow: 0 25px 60px rgba(8,47,73,.30);
+      background: rgba(255, 255, 255, 0.025);
+      box-shadow: 0 28px 90px rgba(8, 145, 178, 0.22);
     }
 
-    .orb-ring-1,
-    .orb-ring-2,
-    .orb-core,
-    .orb-dot,
-    .orb-line-a,
-    .orb-line-b,
-    .orb-caption {
+    .orbital-preview .ring-1,
+    .orbital-preview .ring-2,
+    .orbital-preview .center-dot,
+    .orbital-preview .line-1,
+    .orbital-preview .line-2,
+    .orbital-preview .orange-dot,
+    .orbital-preview .caption {
       position: absolute;
     }
 
-    .orb-ring-1 {
+    .orbital-preview .ring-1 {
       inset: 32px;
-      border: 1px solid rgba(142,234,255,0.20);
+      border: 1px solid rgba(142, 234, 255, 0.2);
       border-radius: 999px;
+      animation: orbitSpin 18s linear infinite;
     }
 
-    .orb-ring-2 {
+    .orbital-preview .ring-2 {
       inset: 80px;
-      border: 1px solid rgba(255,237,213,0.20);
+      border: 1px solid rgba(255, 174, 99, 0.2);
       border-radius: 999px;
     }
 
-    .orb-line-a {
-      left: 19%;
-      top: 50%;
-      width: 62%;
-      height: 1px;
-      rotate: -24deg;
-      background: rgba(142,234,255,0.35);
-    }
-
-    .orb-line-b {
-      left: 48%;
-      top: 18%;
-      width: 1px;
-      height: 62%;
-      rotate: 18deg;
-      background: rgba(147,197,253,0.25);
-    }
-
-    .orb-core {
+    .center-dot {
       left: 50%;
       top: 50%;
       width: 80px;
       height: 80px;
       transform: translate(-50%, -50%);
-      border: 1px solid rgba(207,250,254,0.35);
+      border: 1px solid rgba(207, 250, 254, 0.35);
       border-radius: 999px;
-      background: rgba(142,234,255,0.05);
+      background: rgba(142, 234, 255, 0.05);
     }
 
-    .orb-dot {
+    .line-1 {
+      left: 19%;
+      top: 50%;
+      width: 62%;
+      height: 1px;
+      transform: rotate(-24deg);
+      background: rgba(142, 234, 255, 0.35);
+      animation: pulseLine 2.4s ease-in-out infinite;
+      transform-origin: left;
+    }
+
+    .line-2 {
+      left: 48%;
+      top: 18%;
+      height: 62%;
+      width: 1px;
+      transform: rotate(18deg);
+      background: rgba(147, 197, 253, 0.25);
+      animation: pulseLine 2.4s ease-in-out infinite;
+      transform-origin: top;
+    }
+
+    .orange-dot {
       left: 66%;
       top: 35%;
       width: 16px;
       height: 16px;
       border-radius: 999px;
       background: var(--orange);
-      box-shadow: 0 0 30px rgba(255,138,61,0.55);
+      box-shadow: 0 0 30px rgba(255, 138, 61, 0.55);
     }
 
-    .orb-caption {
+    .orbital-preview .caption {
       left: 40px;
       bottom: 48px;
+      max-width: 260px;
       color: var(--muted-2);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 10px;
+      letter-spacing: 0.28em;
+      line-height: 1.7;
       text-transform: uppercase;
-      letter-spacing: .28em;
     }
 
-    @media (min-width: 1024px) {
-      .hero {
-        padding-inline: 32px;
-      }
-
+    @media (max-width: 950px) {
       .hero-grid {
-        grid-template-columns: 1.1fr .9fr;
+        grid-template-columns: 1fr;
+      }
+
+      .orbital-preview {
+        margin-inline: auto;
       }
     }
 
-    /* Ribbon */
-    .ribbon {
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      background: rgba(255,255,255,0.025);
-      padding: 20px 0;
+    @media (max-width: 720px) {
+      .hero {
+        padding-top: 96px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .vector-button {
+        width: 100%;
+      }
     }
 
-    .ribbon-list {
+    /* Shared sections */
+    .section {
+      position: relative;
+      z-index: 2;
+      padding-block: 96px;
+    }
+
+    .section.dark-band {
+      border-block: 1px solid var(--line);
+      background: #081018;
+    }
+
+    .section.soft-band {
+      border-block: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 20px;
+      margin-bottom: 64px;
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+    }
+
+    .section-code {
+      color: rgba(142, 234, 255, 0.65);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+
+    .section-header h2 {
+      max-width: 920px;
+      margin: 0;
+      color: white;
+      font-size: clamp(2.6rem, 5.1vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.065em;
+      font-weight: 700;
+    }
+
+    .section-header p {
+      max-width: 760px;
+      margin: 24px 0 0;
+      color: #cbd5e1;
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 800px) {
+      .section {
+        padding-block: 78px;
+      }
+
+      .section-header {
+        grid-template-columns: 1fr;
+        margin-bottom: 40px;
+      }
+    }
+
+    .ticker {
+      position: relative;
+      z-index: 2;
+      border-block: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.025);
+      padding-block: 20px;
+    }
+
+    .ticker-list {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      color: #94a3b8;
-      font-size: 11px;
+    }
+
+    .chip {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      padding: 8px 14px;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10px;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      letter-spacing: .28em;
     }
 
-    .ribbon-list span {
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 999px;
-      padding: 8px 16px;
+    .chip.active {
+      border-color: rgba(255, 174, 99, 0.7);
+      color: #fed7aa;
     }
 
-    /* About */
     .about-grid {
       display: grid;
+      grid-template-columns: 0.78fr 1.22fr;
       gap: 48px;
     }
 
-    .copy {
+    .body-copy {
       color: #cbd5e1;
-      font-size: 1.125rem;
+      font-size: 18px;
       line-height: 1.9;
     }
 
-    .copy p {
-      margin: 0 0 24px;
-    }
-
-    .focus-grid {
+    .focus-grid,
+    .cv-grid {
       display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
-      padding-top: 16px;
+      margin-top: 24px;
     }
 
-    .focus-card,
-    .research-card,
-    .skill-card,
-    .cv-card,
-    .project-card {
-      border: 1px solid rgba(255,255,255,0.10);
-      background: var(--panel);
+    .info-card {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.035);
+      padding: 22px;
     }
 
-    .focus-card {
-      border-radius: 1.5rem;
-      padding: 20px;
+    .info-card.sharp {
+      border-radius: 0;
+      background: #070b10;
+      clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
     }
 
-    .focus-card .label {
-      margin: 0;
-      color: rgba(207,250,254,0.70);
-      font-size: 12px;
+    .info-card .label {
+      margin: 0 0 12px;
+      color: rgba(255, 174, 99, 0.7);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
-      letter-spacing: .28em;
     }
 
-    .focus-card .value {
-      margin: 12px 0 0;
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
+    .info-card .value {
+      margin: 0;
+      color: #e2e8f0;
+      line-height: 1.75;
     }
 
-    @media (min-width: 640px) {
-      .focus-grid {
-        grid-template-columns: repeat(3, 1fr);
+    @media (max-width: 950px) {
+      .about-grid,
+      .focus-grid,
+      .cv-grid {
+        grid-template-columns: 1fr;
       }
-    }
-
-    @media (min-width: 1024px) {
-      .about-grid {
-        grid-template-columns: .78fr 1.22fr;
-      }
-    }
-
-    /* Research */
-    .research-section {
-      background: var(--panel-strong);
     }
 
     .research-grid {
       display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 20px;
     }
 
     .research-card {
       position: relative;
       overflow: hidden;
-      border-radius: 2rem;
-      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 26px;
     }
 
-    .research-card .number {
-      margin: 0;
-      color: rgba(142,234,255,0.65);
+    .research-card .index {
+      color: rgba(142, 234, 255, 0.65);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
-      letter-spacing: .3em;
     }
 
     .research-card h3 {
-      margin: 32px 0 0;
+      margin: 36px 0 0;
       color: white;
-      font-size: 1.5rem;
-      line-height: 1.1;
+      font-size: 26px;
     }
 
-    .research-card p:last-child {
-      margin: 12px 0 0;
+    .research-card p {
+      margin: 14px 0 0;
       color: #94a3b8;
-      font-size: .92rem;
+      font-size: 14px;
       line-height: 1.7;
     }
 
-    .research-card .cpu {
-      position: absolute;
-      right: 20px;
-      top: 20px;
-      width: 28px;
-      height: 28px;
-      color: rgba(207,250,254,0.30);
-    }
-
-    @media (min-width: 768px) {
+    @media (max-width: 1000px) {
       .research-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    @media (min-width: 1024px) {
+    @media (max-width: 620px) {
       .research-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: 1fr;
       }
     }
 
     /* Portfolio */
-    .filter-row {
+    .filters {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 32px;
+      gap: 8px;
+      margin-bottom: 36px;
     }
 
-    .filter-btn {
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 999px;
-      background: rgba(255,255,255,0.03);
-      padding: 8px 16px;
-      color: #94a3b8;
-      font-size: 12px;
+    .filter-button {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.2);
+      color: #64748b;
+      padding: 10px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      letter-spacing: .22em;
       transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
     }
 
-    .filter-btn:hover {
-      border-color: rgba(255,255,255,0.25);
-      color: white;
+    .filter-button:hover {
+      border-color: rgba(142, 234, 255, 0.45);
+      color: #cffafe;
     }
 
-    .filter-btn.is-active {
-      border-color: rgba(142,234,255,0.60);
-      background: rgba(142,234,255,0.10);
-      color: #f0fdff;
+    .filter-button.active {
+      border-color: var(--orange);
+      background: rgba(255, 174, 99, 0.1);
+      color: #fed7aa;
     }
 
-    .projects-grid {
+    .project-grid {
       display: grid;
-      gap: 20px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
     }
 
     .project-card {
       position: relative;
       overflow: hidden;
-      border-radius: 2rem;
-      padding: 20px;
-      transition: transform 240ms ease, border-color 240ms ease, background 240ms ease;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #070b10;
+      clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 0 100%);
+      transition: transform 300ms ease, border-color 300ms ease;
     }
 
     .project-card:hover {
       transform: translateY(-4px);
-      border-color: rgba(142,234,255,0.45);
-      background: rgba(255,255,255,0.055);
+      border-color: rgba(142, 234, 255, 0.45);
     }
 
     .project-visual {
-      height: 176px;
+      position: relative;
+      height: 224px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      background: #05090d;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 1.5rem;
-      background: var(--panel-strong);
-      margin-bottom: 20px;
     }
 
-    .visual-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
+    .project-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.8;
       background-image:
-        linear-gradient(90deg, rgba(142,234,255,0.08) 1px, transparent 1px),
-        linear-gradient(rgba(142,234,255,0.08) 1px, transparent 1px);
+        linear-gradient(rgba(142, 234, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(142, 234, 255, 0.07) 1px, transparent 1px);
       background-size: 24px 24px;
     }
 
-    .visual-inner::before {
-      content: "";
+    .project-visual svg {
       position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 112px;
-      height: 112px;
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(142,234,255,0.30);
-      border-radius: 999px;
+      inset: 0;
+      width: 100%;
+      height: 100%;
     }
 
-    .visual-inner::after {
-      content: "";
-      position: absolute;
-      left: 18%;
-      top: 54%;
-      width: 68%;
-      height: 1px;
-      transform: rotate(-18deg);
-      background: rgba(142,234,255,0.35);
-    }
-
-    .visual-category {
+    .project-id {
       position: absolute;
       left: 16px;
-      bottom: 16px;
-      color: rgba(207,250,254,0.60);
+      top: 16px;
+      color: rgba(207, 250, 254, 0.75);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      letter-spacing: .3em;
     }
 
-    .project-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
+    .project-category {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.45);
+      color: #cbd5e1;
+      padding: 7px 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
     }
 
-    .project-card h3 {
-      margin: 0;
-      color: white;
-      font-size: 1.25rem;
-      line-height: 1.2;
-      letter-spacing: -0.02em;
+    .project-body {
+      padding: 24px;
+    }
+
+    .project-meta {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: #94a3b8;
+      font-size: 12px;
     }
 
     .project-year {
-      flex: 0 0 auto;
-      color: var(--muted-2);
-      font-size: 12px;
+      color: rgba(255, 218, 185, 0.82);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-weight: 700;
+    }
+
+    .project-title {
+      margin: 0;
+      color: white;
+      font-size: 24px;
+      line-height: 1.1;
+      letter-spacing: -0.045em;
     }
 
     .project-summary {
-      margin: 12px 0 0;
+      min-height: 112px;
+      margin: 18px 0 0;
       color: #cbd5e1;
-      font-size: .92rem;
-      line-height: 1.7;
+      font-size: 14px;
+      line-height: 1.85;
     }
 
-    .project-tools {
-      margin: 16px 0 0;
-      color: var(--muted-2);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .22em;
-    }
-
-    .tag-row {
+    .tag-list {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       margin-top: 20px;
     }
 
-    .tag {
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 999px;
-      padding: 4px 12px;
+    .project-tag {
+      display: inline-flex;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       color: #94a3b8;
+      padding: 6px 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 10px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      letter-spacing: .22em;
     }
 
-    @media (min-width: 768px) {
-      .projects-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .project-tag.primary {
+      border-color: rgba(255, 174, 99, 0.7);
+      color: #fed7aa;
+    }
+
+    .case-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 28px;
+      border: 0;
+      border-bottom: 1px solid rgba(142, 234, 255, 0.4);
+      background: transparent;
+      color: #cffafe;
+      padding: 0 0 5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      transition: color 180ms ease, border-color 180ms ease;
+    }
+
+    .case-link span {
+      transition: transform 180ms ease;
+    }
+
+    .project-card:hover .case-link span {
+      transform: translateX(4px);
+    }
+
+    .case-link:hover {
+      border-color: var(--orange);
+      color: #fed7aa;
+    }
+
+    @media (max-width: 1050px) {
+      .project-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    @media (min-width: 1280px) {
-      .projects-grid {
-        grid-template-columns: repeat(3, 1fr);
+    @media (max-width: 700px) {
+      .project-grid {
+        grid-template-columns: 1fr;
       }
     }
 
-    /* Experiments */
-    .experiments-section {
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      background: rgba(255,255,255,0.025);
-    }
-
-    .experiments-grid {
+    /* Lab/contact */
+    .lab-grid {
       display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
       gap: 48px;
+      align-items: start;
     }
 
-    .skills-grid {
+    .skill-grid {
       display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
     }
 
     .skill-card {
-      border-radius: 1.75rem;
-      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: #050608;
       padding: 24px;
       transition: border-color 180ms ease;
     }
 
     .skill-card:hover {
-      border-color: rgba(142,234,255,0.40);
+      border-color: rgba(142, 234, 255, 0.4);
     }
 
     .skill-icon {
-      display: flex;
+      display: grid;
       width: 40px;
       height: 40px;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(142,234,255,0.25);
+      place-items: center;
+      margin-bottom: 32px;
+      border: 1px solid rgba(142, 234, 255, 0.25);
       border-radius: 999px;
       color: #cffafe;
-      margin-bottom: 32px;
     }
 
     .skill-card h3 {
       margin: 0;
       color: white;
-      font-size: 1.25rem;
+      font-size: 20px;
     }
 
     .skill-card p {
       margin: 12px 0 0;
       color: #94a3b8;
-      font-size: .92rem;
+      font-size: 14px;
       line-height: 1.7;
     }
 
-    @media (min-width: 640px) {
-      .skills-grid {
-        grid-template-columns: repeat(2, 1fr);
+    @media (max-width: 950px) {
+      .lab-grid,
+      .skill-grid {
+        grid-template-columns: 1fr;
       }
     }
 
-    @media (min-width: 1024px) {
-      .experiments-grid {
-        grid-template-columns: .9fr 1.1fr;
-      }
-    }
-
-    /* CV */
-    .cv-grid {
-      display: grid;
-      gap: 20px;
-    }
-
-    .cv-card {
-      border-radius: 2rem;
-      padding: 28px;
-    }
-
-    .cv-card h3 {
-      margin: 0;
-      color: rgba(254,215,170,0.70);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .3em;
-    }
-
-    .cv-card p {
-      margin: 20px 0 0;
-      color: #cbd5e1;
-      line-height: 1.75;
-    }
-
-    .cv-action {
-      margin-top: 32px;
-    }
-
-    @media (min-width: 1024px) {
-      .cv-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    /* Contact */
     .contact-section {
       position: relative;
+      z-index: 2;
       overflow: hidden;
       border-top: 1px solid var(--line);
-      padding: 96px 0;
+      padding-block: 96px;
     }
 
     .contact-section::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 0%, rgba(142,234,255,0.12), transparent 34%);
+      background: radial-gradient(circle at 50% 0%, rgba(142, 234, 255, 0.12), transparent 34%);
     }
 
-    .contact-inner {
+    .contact-card {
       position: relative;
-      max-width: 896px;
-      margin: 0 auto;
+      max-width: 900px;
+      margin-inline: auto;
       text-align: center;
     }
 
-    .contact-inner h2 {
-      margin: 0;
-      color: white;
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      line-height: 1.05;
-      letter-spacing: -0.05em;
+    .contact-card .kicker {
+      margin: 0 0 16px;
+      color: rgba(142, 234, 255, 0.75);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
     }
 
-    .contact-inner p:not(.eyebrow) {
-      max-width: 672px;
+    .contact-card h2 {
+      margin: 0;
+      color: white;
+      font-size: clamp(2.7rem, 5vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+    }
+
+    .contact-card p {
+      max-width: 680px;
       margin: 24px auto 0;
       color: #cbd5e1;
-      font-size: 1.125rem;
-      line-height: 1.8;
+      font-size: 18px;
+      line-height: 1.75;
     }
 
     .contact-actions {
@@ -1107,68 +1172,25 @@ html = r'''<!DOCTYPE html>
       gap: 12px;
       margin-top: 36px;
     }
-
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-
-      *,
-      *::before,
-      *::after {
-        animation: none !important;
-        transition-duration: 0ms !important;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .container {
-        width: min(100% - 32px, var(--max));
-      }
-
-      .hero {
-        padding-inline: 16px;
-      }
-
-      .hero-grid {
-        padding: 64px 0;
-      }
-
-      .orb {
-        max-width: 340px;
-      }
-
-      .orb-caption {
-        left: 28px;
-        right: 28px;
-        bottom: 36px;
-      }
-
-      .section,
-      .contact-section {
-        padding: 76px 0;
-      }
-    }
   </style>
 </head>
 <body>
-  <div class="site">
-    <div class="cursor-trail" aria-hidden="true"></div>
-    <div class="cursor-ring" aria-hidden="true">
-      <div class="cursor-ring-inner">
-        <i></i><i></i><i></i><i></i>
-      </div>
-    </div>
-    <div class="cursor-dot" aria-hidden="true">
-      <div class="cursor-dot-inner">
-        <span class="cursor-core"></span>
-        <span class="cursor-ray"></span>
-        <span class="cursor-label">tcp</span>
+  <div class="site-shell">
+    <div class="fixed-glow"></div>
+    <div class="scanline"></div>
+
+    <div class="cursor-trail" id="cursorTrail" aria-hidden="true"></div>
+    <div class="cursor-ring" id="cursorRing" aria-hidden="true"><div class="ring-shape"><span></span></div></div>
+    <div class="cursor-dot" id="cursorDot" aria-hidden="true">
+      <div class="dot-shape">
+        <span class="dot-core"></span>
+        <span class="dot-line"></span>
+        <span class="dot-label" id="cursorLabel">tcp</span>
       </div>
     </div>
 
-    <header class="header">
-      <nav class="nav container" aria-label="Primary navigation">
+    <header class="site-header">
+      <nav class="container nav" aria-label="Primary navigation">
         <a href="#home" class="brand" data-cursor="interactive">
           <span class="brand-mark">B</span>
           <span>
@@ -1177,72 +1199,64 @@ html = r'''<!DOCTYPE html>
           </span>
         </a>
 
-        <div class="nav-links font-mono" id="desktop-nav"></div>
+        <div class="nav-links" id="navLinks"></div>
 
-        <button class="menu-toggle font-mono" id="menu-toggle" type="button" aria-label="Toggle navigation">
-          Menu
-        </button>
+        <button class="menu-toggle" id="menuToggle" type="button" data-cursor="interactive" aria-label="Toggle navigation">Menu</button>
       </nav>
 
-      <div class="mobile-menu" id="mobile-menu">
-        <div class="mobile-menu-inner font-mono" id="mobile-nav"></div>
+      <div class="mobile-menu" id="mobileMenu">
+        <div class="container mobile-menu-inner" id="mobileLinks"></div>
       </div>
     </header>
 
     <main>
       <section id="home" class="hero">
-        <canvas id="hero-canvas" aria-hidden="true"></canvas>
-        <div class="hero-overlay" aria-hidden="true"></div>
-
+        <canvas id="heroCanvas" aria-hidden="true"></canvas>
         <div class="container hero-grid">
           <div>
-            <p class="hero-kicker font-mono">Computational design / robotic construction</p>
-            <h1 class="hero-title">
+            <p class="hero-kicker">Computational design / robotic construction</p>
+            <h1>
               Bahar Bagheri
               <span class="gradient-text">designs through code, tools, and robotic motion.</span>
             </h1>
-            <p class="hero-description">
+            <p class="hero-copy">
               I work at the intersection of architecture, computation, programming, and robotic fabrication, exploring how intelligent construction systems can reshape the way we design and build.
             </p>
             <div class="hero-actions">
-              <a class="btn" href="#research" data-cursor="interactive">Explore Research <span class="arrow-icon"></span></a>
-              <a class="btn secondary" href="#portfolio" data-cursor="interactive">View Portfolio <span class="arrow-icon"></span></a>
-              <a class="btn download" href="#cv" data-cursor="interactive">Download CV <span class="download-icon"></span></a>
+              <a href="#research" class="vector-button primary" data-cursor="interactive"><span>Explore research</span><span>↗</span></a>
+              <a href="#portfolio" class="vector-button" data-cursor="interactive"><span>View portfolio</span><span>↗</span></a>
+              <a href="#cv" class="vector-button" data-cursor="interactive"><span>Download CV</span><span>↗</span></a>
             </div>
           </div>
 
-          <div class="orb" data-cursor="interactive">
-            <div class="orb-ring-1 spin-slow"></div>
-            <div class="orb-ring-2"></div>
-            <div class="orb-line-a pulse-line"></div>
-            <div class="orb-line-b pulse-line"></div>
-            <div class="orb-core"></div>
-            <div class="orb-dot"></div>
-            <div class="orb-caption font-mono">End-effector workspace / construction logic</div>
+          <div class="orbital-preview" aria-hidden="true">
+            <span class="ring-1"></span>
+            <span class="ring-2"></span>
+            <span class="line-1"></span>
+            <span class="line-2"></span>
+            <span class="center-dot"></span>
+            <span class="orange-dot"></span>
+            <span class="caption">End-effector workspace / construction logic</span>
           </div>
         </div>
       </section>
 
-      <section class="ribbon">
-        <div class="container ribbon-list font-mono">
-          <span>Architecture</span>
-          <span>Computational Design</span>
-          <span>Robotic Arms</span>
-          <span>Construction Automation</span>
-          <span>Programming</span>
-          <span>Digital Fabrication</span>
-          <span>Spatial Systems</span>
-        </div>
+      <section class="ticker">
+        <div class="container ticker-list" id="tickerList"></div>
       </section>
 
       <section id="about" class="section">
-        <div class="container about-grid">
-          <div class="section-label">
-            <p class="eyebrow font-mono">About</p>
-            <h2 class="section-title">Architecture as foundation. Computation as method. Robotics as frontier.</h2>
+        <div class="container section-header">
+          <div class="section-code">01 / About</div>
+          <div>
+            <h2>Architecture as foundation. Computation as method. Robotics as frontier.</h2>
+            <p>Architecture is the foundation. Computation is the method. Robotics is the research frontier.</p>
           </div>
+        </div>
 
-          <div class="copy">
+        <div class="container about-grid">
+          <div></div>
+          <div class="body-copy">
             <p>
               With an architectural foundation and a master’s degree in Computational Design from the University of Tehran, Bahar Bagheri is currently pursuing interdisciplinary research at Texas Tech University focused on robotic arms in construction.
             </p>
@@ -1250,107 +1264,77 @@ html = r'''<!DOCTYPE html>
               Her work connects spatial design, code, fabrication logic, and automation to investigate new ways of thinking about construction systems. Rather than treating technology as a visual layer, she approaches computation as a design method for geometry, behavior, material logic, and robotic action.
             </p>
             <div class="focus-grid">
-              <div class="focus-card">
-                <p class="label font-mono">Focus</p>
-                <p class="value">Design logic</p>
-              </div>
-              <div class="focus-card">
-                <p class="label font-mono">Focus</p>
-                <p class="value">Code workflows</p>
-              </div>
-              <div class="focus-card">
-                <p class="label font-mono">Focus</p>
-                <p class="value">Robotic fabrication</p>
-              </div>
+              <div class="info-card"><p class="label">Focus</p><p class="value">Design logic</p></div>
+              <div class="info-card"><p class="label">Focus</p><p class="value">Code workflows</p></div>
+              <div class="info-card"><p class="label">Focus</p><p class="value">Robotic fabrication</p></div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="research" class="section border-y research-section">
-        <div class="container">
-          <div class="section-label">
-            <p class="eyebrow font-mono">Research</p>
-            <h2 class="section-title">Robotic construction systems</h2>
-            <p>
-              Bahar’s research investigates how robotic arms, computational design workflows, and construction logic can converge to create more intelligent, precise, and adaptive fabrication systems.
-            </p>
+      <section id="research" class="section dark-band">
+        <div class="container section-header">
+          <div class="section-code">02 / Research</div>
+          <div>
+            <h2>Robotic construction systems</h2>
+            <p>Bahar’s research investigates how robotic arms, computational design workflows, and construction logic can converge to create more intelligent, precise, and adaptive fabrication systems.</p>
           </div>
-
-          <div class="research-grid" id="research-grid"></div>
         </div>
+
+        <div class="container research-grid" id="researchGrid"></div>
       </section>
 
       <section id="portfolio" class="section">
-        <div class="container">
-          <div class="section-label">
-            <p class="eyebrow font-mono">Portfolio</p>
-            <h2 class="section-title">Selected work across design systems, fabrication, and code.</h2>
-            <p>
-              Each project is presented as both a visual artifact and a technical process, documenting concepts, tools, workflows, and decisions behind the work.
-            </p>
+        <div class="container section-header">
+          <div class="section-code">03 / Portfolio</div>
+          <div>
+            <h2>Case files, not generic project cards.</h2>
+            <p>Work across computational design, architecture, robotic fabrication, programming, simulation, and experimental design research.</p>
           </div>
+        </div>
 
-          <div class="filter-row font-mono" id="filter-row"></div>
-          <div class="projects-grid" id="projects-grid"></div>
+        <div class="container">
+          <div class="filters" id="projectFilters"></div>
+          <div class="project-grid" id="projectGrid"></div>
         </div>
       </section>
 
-      <section id="experiments" class="section experiments-section">
-        <div class="container experiments-grid">
-          <div class="section-label">
-            <p class="eyebrow font-mono">Interactive Lab</p>
-            <h2 class="section-title">Small studies, live questions, and computational sketches.</h2>
-            <p>
-              A lab-like space for robotic path visualizations, generative geometry, simulation studies, construction sequencing diagrams, and code-based spatial experiments.
-            </p>
+      <section id="experiments" class="section soft-band">
+        <div class="container lab-grid">
+          <div class="section-header" style="display:block; margin-bottom:0;">
+            <div class="section-code" style="margin-bottom:18px;">04 / Experiments</div>
+            <h2>Small studies, live questions, and computational sketches.</h2>
+            <p>A lab-like space for robotic path visualizations, generative geometry, simulation studies, construction sequencing diagrams, and code-based spatial experiments.</p>
           </div>
 
-          <div class="skills-grid" id="skills-grid"></div>
+          <div class="skill-grid" id="skillGrid"></div>
         </div>
       </section>
 
       <section id="cv" class="section">
-        <div class="container">
-          <div class="section-label">
-            <p class="eyebrow font-mono">CV</p>
-            <h2 class="section-title">Academic profile and technical range.</h2>
-            <p>
-              A concise overview of education, research interests, technical skills, design background, selected projects, and academic development.
-            </p>
+        <div class="container section-header">
+          <div class="section-code">05 / CV</div>
+          <div>
+            <h2>Academic profile and technical range.</h2>
+            <p>A concise overview of education, research interests, technical skills, design background, selected projects, and academic development.</p>
           </div>
+        </div>
 
-          <div class="cv-grid">
-            <div class="cv-card">
-              <h3 class="font-mono">Education</h3>
-              <p>Architecture, University of Tehran · Computational Design, University of Tehran · Interdisciplinary Studies, Texas Tech University</p>
-            </div>
-            <div class="cv-card">
-              <h3 class="font-mono">Research Interests</h3>
-              <p>Robotic construction, computational workflows, digital fabrication, automation, toolpath design, spatial systems</p>
-            </div>
-            <div class="cv-card">
-              <h3 class="font-mono">Technical Skills</h3>
-              <p>Rhino, Grasshopper, Python, simulation workflows, creative coding, visualization, research documentation</p>
-            </div>
-          </div>
-
-          <div class="cv-action">
-            <a class="btn download" href="#contact" data-cursor="interactive">Request / Download CV <span class="download-icon"></span></a>
-          </div>
+        <div class="container cv-grid">
+          <div class="info-card sharp"><p class="label">Education</p><p class="value">Architecture, University of Tehran · Computational Design, University of Tehran · Interdisciplinary Studies, Texas Tech University</p></div>
+          <div class="info-card sharp"><p class="label">Research Interests</p><p class="value">Robotic construction, computational workflows, digital fabrication, automation, toolpath design, spatial systems</p></div>
+          <div class="info-card sharp"><p class="label">Technical Skills</p><p class="value">Rhino, Grasshopper, Python, simulation workflows, creative coding, visualization, research documentation</p></div>
         </div>
       </section>
 
       <section id="contact" class="contact-section">
-        <div class="container contact-inner">
-          <p class="eyebrow font-mono">Contact</p>
+        <div class="container contact-card">
+          <p class="kicker">06 / Contact</p>
           <h2>Let’s connect around computation, robotics, and construction.</h2>
-          <p>
-            Open to research collaborations, computational design projects, robotic fabrication inquiries, and interdisciplinary academic opportunities.
-          </p>
+          <p>Open to research collaborations, computational design projects, robotic fabrication inquiries, and interdisciplinary academic opportunities.</p>
           <div class="contact-actions">
-            <a class="btn" href="mailto:hello@example.com" data-cursor="interactive">Email Bahar <span class="arrow-icon"></span></a>
-            <a class="btn secondary" href="#portfolio" data-cursor="interactive">View Work <span class="arrow-icon"></span></a>
+            <a href="mailto:hello@example.com" class="vector-button primary" data-cursor="interactive"><span>Email Bahar</span><span>↗</span></a>
+            <a href="#portfolio" class="vector-button" data-cursor="interactive"><span>View Work</span><span>↗</span></a>
           </div>
         </div>
       </section>
@@ -1368,57 +1352,81 @@ html = r'''<!DOCTYPE html>
       { label: "Contact", href: "#contact" }
     ];
 
-    const projectFilters = ["All", "Robotics", "Computational Design", "Architecture", "Programming", "Research", "Fabrication", "Visual Experiments"];
+    const projectFilters = [
+      "All",
+      "Robotics",
+      "Computational Design",
+      "Architecture",
+      "Programming",
+      "Research",
+      "Fabrication",
+      "Visual Experiments"
+    ];
 
     const projects = [
       {
-        title: "Robotic Toolpath Study",
+        id: "P-01",
+        title: "Robotic Construction Path Study",
         category: "Robotics",
         year: "2026",
-        tools: "Robot simulation, Python, Rhino",
-        summary: "A fabrication-aware study of robotic end-effector motion, path sequencing, and spatial precision.",
-        tags: ["Robotics", "Toolpaths", "Construction"]
+        tools: "Rhino / Grasshopper / Python / Robot Simulation",
+        summary: "A fabrication-aware study of robotic trajectories for construction-scale assemblies, focusing on motion logic, tolerances, and spatial sequencing.",
+        tags: ["Robotics", "Toolpaths", "Construction Automation"]
       },
       {
-        title: "Parametric Assembly Logic",
+        id: "P-02",
+        title: "Parametric Spatial System",
         category: "Computational Design",
         year: "2025",
-        tools: "Grasshopper, Rhino, Python",
-        summary: "A computational system for studying repeatable assembly units and construction-oriented geometry.",
-        tags: ["Parametric", "Assembly", "Geometry"]
+        tools: "Grasshopper / Rhino / Python",
+        summary: "A computational workflow translating spatial constraints into variable architectural systems with controlled geometric behavior.",
+        tags: ["Parametric Design", "Geometry", "Simulation"]
       },
       {
-        title: "Spatial Systems Archive",
-        category: "Architecture",
-        year: "2024",
-        tools: "Rhino, Adobe Suite, Diagrams",
-        summary: "Architectural explorations translated into structured diagrams, sectional systems, and spatial logic.",
-        tags: ["Architecture", "Systems", "Diagrams"]
-      },
-      {
-        title: "Construction Sequence Model",
-        category: "Research",
-        year: "2026",
-        tools: "Simulation, Computational workflow",
-        summary: "A research prototype connecting computational design inputs to programmable construction decisions.",
-        tags: ["Research", "Automation", "Workflow"]
-      },
-      {
-        title: "Generative Fabrication Field",
+        id: "P-03",
+        title: "Digital Fabrication Logic",
         category: "Fabrication",
         year: "2025",
-        tools: "Creative coding, geometry processing",
-        summary: "A visual and technical experiment in coded material paths, gradient density, and fabrication constraints.",
-        tags: ["Fabrication", "Coding", "Material"]
+        tools: "CAD-CAM / Fabrication Studies / Grasshopper",
+        summary: "A fabrication-focused investigation of how material limits, machine paths, and assembly rules can become design parameters.",
+        tags: ["Fabrication", "Material Logic", "Workflow"]
       },
       {
-        title: "Robotics Data Interface",
+        id: "P-04",
+        title: "Code-Based Pattern Atlas",
         category: "Programming",
+        year: "2024",
+        tools: "Python / Processing / Geometry Algorithms",
+        summary: "A collection of code-generated geometries studying repetition, field behavior, density gradients, and computational ornament.",
+        tags: ["Creative Coding", "Python", "Generative Geometry"]
+      },
+      {
+        id: "P-05",
+        title: "Architectural Assembly Prototype",
+        category: "Architecture",
+        year: "2024",
+        tools: "Rhino / Physical Modeling / Visualization",
+        summary: "An architectural assembly study focused on modular structure, spatial hierarchy, construction logic, and representational precision.",
+        tags: ["Architecture", "Assembly", "Systems"]
+      },
+      {
+        id: "P-06",
+        title: "Construction Automation Research Map",
+        category: "Research",
         year: "2026",
-        tools: "React, Canvas, data visualization",
-        summary: "A minimal interface concept for showing coordinates, motion status, and robotic fabrication metadata.",
-        tags: ["Programming", "Interface", "Data"]
+        tools: "Research Mapping / Diagrams / Computational Workflow",
+        summary: "A visual research framework connecting robotic arms, digital fabrication, construction sequencing, and spatial computation.",
+        tags: ["Research", "Automation", "Robotics"]
       }
+    ];
+
+    const tickerItems = ["Architecture", "Computational Design", "Robotic Arms", "Construction Automation", "Programming", "Digital Fabrication", "Spatial Systems"];
+
+    const researchItems = [
+      ["01", "Geometry", "Spatial inputs and architectural systems are translated into computational relationships."],
+      ["02", "Parameters", "Design variables define constraints, fabrication logic, and construction sequencing."],
+      ["03", "Toolpath", "Curves, paths, and motion data become fabrication-aware robotic instructions."],
+      ["04", "Robotic Motion", "Robotic arms execute programmable spatial actions within construction workflows."]
     ];
 
     const skills = [
@@ -1430,195 +1438,142 @@ html = r'''<!DOCTYPE html>
       ["Research", "Academic questions, methods, documentation"]
     ];
 
-    const researchSteps = [
-      ["Geometry", "Spatial inputs and architectural systems are translated into computational relationships."],
-      ["Parameters", "Design variables define constraints, fabrication logic, and construction sequencing."],
-      ["Toolpath", "Curves, paths, and motion data become fabrication-aware robotic instructions."],
-      ["Robotic Motion", "Robotic arms execute programmable spatial actions within construction workflows."]
-    ];
+    let activeFilter = "All";
 
-    const icons = {
-      arrow: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>',
-      download: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>',
-      grid: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>',
-      cpu: '<svg class="icon cpu" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="8" height="8" rx="1.5"></rect><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"></path></svg>'
-    };
-
-    function hydrateIcons() {
-      document.querySelectorAll(".arrow-icon").forEach((el) => { el.innerHTML = icons.arrow; });
-      document.querySelectorAll(".download-icon").forEach((el) => { el.innerHTML = icons.download; });
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
 
-    function renderNavigation() {
-      const desktop = document.getElementById("desktop-nav");
-      const mobile = document.getElementById("mobile-nav");
+    function initNavigation() {
+      const navLinks = document.getElementById("navLinks");
+      const mobileLinks = document.getElementById("mobileLinks");
+      const menuToggle = document.getElementById("menuToggle");
+      const mobileMenu = document.getElementById("mobileMenu");
 
-      desktop.innerHTML = navItems.map((item, index) => `
-        <a href="${item.href}" data-cursor="interactive">
-          <span class="nav-index">${String(index + 1).padStart(2, "0")}</span>${item.label}
+      navLinks.innerHTML = navItems.map((item, index) => `
+        <a class="nav-link" href="${item.href}" data-cursor="interactive">
+          <span class="nav-number">${String(index + 1).padStart(2, "0")}</span>${item.label}
         </a>
       `).join("");
 
-      mobile.innerHTML = navItems.map((item, index) => `
+      mobileLinks.innerHTML = navItems.map((item, index) => `
         <a href="${item.href}" data-cursor="interactive">
-          <span class="nav-index">${String(index + 1).padStart(2, "0")}</span>${item.label}
+          <span class="nav-number">${String(index + 1).padStart(2, "0")}</span>${item.label}
         </a>
       `).join("");
-    }
 
-    function setupMobileMenu() {
-      const button = document.getElementById("menu-toggle");
-      const menu = document.getElementById("mobile-menu");
-
-      button.addEventListener("click", () => {
-        const isOpen = menu.classList.toggle("is-open");
-        button.textContent = isOpen ? "Close" : "Menu";
+      menuToggle.addEventListener("click", () => {
+        const isOpen = mobileMenu.classList.toggle("is-open");
+        menuToggle.textContent = isOpen ? "Close" : "Menu";
       });
 
-      menu.addEventListener("click", (event) => {
-        if (event.target.matches("a")) {
-          menu.classList.remove("is-open");
-          button.textContent = "Menu";
-        }
-      });
-    }
-
-    function renderResearch() {
-      const grid = document.getElementById("research-grid");
-      grid.innerHTML = researchSteps.map(([title, text], index) => `
-        <article class="research-card" data-cursor="interactive">
-          <p class="number font-mono">0${index + 1}</p>
-          <h3>${title}</h3>
-          <p>${text}</p>
-          ${icons.cpu}
-        </article>
-      `).join("");
-    }
-
-    function renderFilters(activeFilter = "All") {
-      const row = document.getElementById("filter-row");
-      row.innerHTML = projectFilters.map((filter) => `
-        <button class="filter-btn ${activeFilter === filter ? "is-active" : ""}" type="button" data-filter="${filter}" data-cursor="interactive">
-          ${filter}
-        </button>
-      `).join("");
-
-      row.querySelectorAll("button").forEach((button) => {
-        button.addEventListener("click", () => {
-          renderFilters(button.dataset.filter);
-          renderProjects(button.dataset.filter);
+      mobileLinks.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("is-open");
+          menuToggle.textContent = "Menu";
         });
       });
     }
 
-    function renderProjects(activeFilter = "All") {
-      const grid = document.getElementById("projects-grid");
-      const filtered = activeFilter === "All"
+    function initTicker() {
+      const tickerList = document.getElementById("tickerList");
+      tickerList.innerHTML = tickerItems.map((item, index) => `<span class="chip ${index === 2 ? "active" : ""}">${escapeHtml(item)}</span>`).join("");
+    }
+
+    function initResearch() {
+      const grid = document.getElementById("researchGrid");
+      grid.innerHTML = researchItems.map(([index, title, text]) => `
+        <article class="research-card" data-cursor="interactive">
+          <div class="index">${index}</div>
+          <h3>${escapeHtml(title)}</h3>
+          <p>${escapeHtml(text)}</p>
+        </article>
+      `).join("");
+    }
+
+    function projectSvg(index) {
+      const p1 = `M40 ${180 - index * 10} L150 ${60 + index * 12} L260 ${135 - index * 4} L420 ${42 + index * 15}`;
+      const p2 = `M80 ${66 + index * 12} L210 ${200 - index * 9} L330 ${92 + index * 6} L470 ${178 - index * 13}`;
+      return `
+        <svg viewBox="0 0 500 270" preserveAspectRatio="none" aria-hidden="true">
+          <path d="${p1}" fill="none" stroke="rgba(142,234,255,.5)" stroke-width="1.5"></path>
+          <path d="${p2}" fill="none" stroke="rgba(255,138,61,.42)" stroke-width="1.5"></path>
+          <circle cx="${150 + index * 18}" cy="${60 + index * 12}" r="5" fill="rgba(142,234,255,.85)"></circle>
+          <rect x="${330 - index * 12}" y="${88 + index * 6}" width="8" height="8" fill="rgba(255,138,61,.75)"></rect>
+          <path d="M360 220h92M452 220v-38" stroke="rgba(255,255,255,.22)"></path>
+        </svg>
+      `;
+    }
+
+    function renderFilters() {
+      const filters = document.getElementById("projectFilters");
+      filters.innerHTML = projectFilters.map((filter) => `
+        <button class="filter-button ${filter === activeFilter ? "active" : ""}" type="button" data-filter="${escapeHtml(filter)}" data-cursor="interactive">${escapeHtml(filter)}</button>
+      `).join("");
+
+      filters.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("click", () => {
+          activeFilter = button.dataset.filter;
+          renderFilters();
+          renderProjects();
+        });
+      });
+    }
+
+    function renderProjects() {
+      const grid = document.getElementById("projectGrid");
+      const visibleProjects = activeFilter === "All"
         ? projects
         : projects.filter((project) => project.category === activeFilter || project.tags.includes(activeFilter));
 
-      grid.innerHTML = filtered.map((project) => `
+      grid.innerHTML = visibleProjects.map((project, index) => `
         <article class="project-card" data-cursor="interactive">
           <div class="project-visual">
-            <div class="visual-inner">
-              <div class="visual-category font-mono">${project.category}</div>
+            ${projectSvg(index)}
+            <div class="project-id">${escapeHtml(project.id)}</div>
+            <div class="project-category">${escapeHtml(project.category)}</div>
+          </div>
+          <div class="project-body">
+            <div class="project-meta">
+              <span class="project-year">${escapeHtml(project.year)}</span>
+              <span>${escapeHtml(project.tools)}</span>
             </div>
-          </div>
-          <div class="project-head">
-            <h3>${project.title}</h3>
-            <span class="project-year font-mono">${project.year}</span>
-          </div>
-          <p class="project-summary">${project.summary}</p>
-          <p class="project-tools font-mono">${project.tools}</p>
-          <div class="tag-row">
-            ${project.tags.map((tag) => `<span class="tag font-mono">${tag}</span>`).join("")}
+            <h3 class="project-title">${escapeHtml(project.title)}</h3>
+            <p class="project-summary">${escapeHtml(project.summary)}</p>
+            <div class="tag-list">
+              ${project.tags.map((tag, tagIndex) => `<span class="project-tag ${tagIndex === 0 ? "primary" : ""}">${escapeHtml(tag)}</span>`).join("")}
+            </div>
+            <button class="case-link" type="button" data-cursor="interactive">Open case file <span>→</span></button>
           </div>
         </article>
       `).join("");
     }
 
-    function renderSkills() {
-      const grid = document.getElementById("skills-grid");
-      grid.innerHTML = skills.map(([title, description]) => `
+    function initSkills() {
+      const skillGrid = document.getElementById("skillGrid");
+      skillGrid.innerHTML = skills.map(([title, description]) => `
         <article class="skill-card" data-cursor="interactive">
-          <div class="skill-icon">${icons.grid}</div>
-          <h3>${title}</h3>
-          <p>${description}</p>
+          <div class="skill-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+            </svg>
+          </div>
+          <h3>${escapeHtml(title)}</h3>
+          <p>${escapeHtml(description)}</p>
         </article>
       `).join("");
     }
 
-    function setupCustomCursor() {
-      const finePointer = window.matchMedia("(pointer: fine)").matches;
-      if (!finePointer) return;
-
-      const trailLayer = document.querySelector(".cursor-trail");
-      const ring = document.querySelector(".cursor-ring");
-      const dot = document.querySelector(".cursor-dot");
-      const label = document.querySelector(".cursor-label");
-      const interactiveSelector = "a, button, input, textarea, select, [data-cursor='interactive']";
-      const position = { x: -100, y: -100 };
-      const smooth = { x: -100, y: -100 };
-      let visible = false;
-      let active = false;
-      let lastTrail = 0;
-      let trail = [];
-      let frame = 0;
-
-      function setVisible(value) {
-        visible = value;
-        ring.classList.toggle("is-visible", value);
-        dot.classList.toggle("is-visible", value);
-        renderTrail();
-      }
-
-      function setActive(value) {
-        active = value;
-        ring.classList.toggle("is-active", value);
-        dot.classList.toggle("is-active", value);
-        label.textContent = value ? "lock" : "tcp";
-      }
-
-      function renderTrail() {
-        trailLayer.innerHTML = trail.map((point, index) => {
-          const opacity = visible ? Math.max(0.08, 0.28 - index * 0.025) : 0;
-          const scale = 1 - index * 0.06;
-          return `<span style="left:${point.x}px; top:${point.y}px; opacity:${opacity}; transform:translate(-50%, -50%) scale(${scale});"></span>`;
-        }).join("");
-      }
-
-      window.addEventListener("mousemove", (event) => {
-        position.x = event.clientX;
-        position.y = event.clientY;
-        setVisible(true);
-
-        const element = document.elementFromPoint(event.clientX, event.clientY);
-        setActive(Boolean(element && element.closest(interactiveSelector)));
-
-        const now = performance.now();
-        if (now - lastTrail > 34) {
-          lastTrail = now;
-          trail = [{ id: now, x: event.clientX, y: event.clientY }, ...trail.slice(0, 8)];
-          renderTrail();
-        }
-      });
-
-      window.addEventListener("mouseleave", () => setVisible(false));
-      window.addEventListener("mouseenter", () => setVisible(true));
-
-      function animate() {
-        smooth.x += (position.x - smooth.x) * 0.22;
-        smooth.y += (position.y - smooth.y) * 0.22;
-        dot.style.transform = `translate3d(${smooth.x}px, ${smooth.y}px, 0)`;
-        ring.style.transform = `translate3d(${position.x}px, ${position.y}px, 0)`;
-        frame = requestAnimationFrame(animate);
-      }
-
-      frame = requestAnimationFrame(animate);
-    }
-
-    function setupHeroCanvas() {
-      const canvas = document.getElementById("hero-canvas");
+    function initHeroCanvas() {
+      const canvas = document.getElementById("heroCanvas");
       const context = canvas.getContext("2d");
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       let width = 0;
@@ -1630,8 +1585,8 @@ html = r'''<!DOCTYPE html>
         const ratio = window.devicePixelRatio || 1;
         width = canvas.offsetWidth;
         height = canvas.offsetHeight;
-        canvas.width = Math.max(1, width * ratio);
-        canvas.height = Math.max(1, height * ratio);
+        canvas.width = Math.max(1, Math.floor(width * ratio));
+        canvas.height = Math.max(1, Math.floor(height * ratio));
         context.setTransform(ratio, 0, 0, ratio, 0, 0);
       }
 
@@ -1639,14 +1594,12 @@ html = r'''<!DOCTYPE html>
         context.strokeStyle = "rgba(142,234,255,0.055)";
         context.lineWidth = 1;
         const step = 46;
-
         for (let x = 0; x < width; x += step) {
           context.beginPath();
           context.moveTo(x, 0);
           context.lineTo(x, height);
           context.stroke();
         }
-
         for (let y = 0; y < height; y += step) {
           context.beginPath();
           context.moveTo(0, y);
@@ -1657,7 +1610,6 @@ html = r'''<!DOCTYPE html>
 
       function drawPath(offset, color, alpha, lineWidth) {
         context.beginPath();
-
         for (let i = 0; i < 170; i += 1) {
           const t = i / 169;
           const x = width * (0.08 + t * 0.84);
@@ -1665,7 +1617,6 @@ html = r'''<!DOCTYPE html>
           if (i === 0) context.moveTo(x, y);
           else context.lineTo(x, y);
         }
-
         context.strokeStyle = color.replace("ALPHA", alpha);
         context.lineWidth = lineWidth;
         context.stroke();
@@ -1675,7 +1626,6 @@ html = r'''<!DOCTYPE html>
         context.clearRect(0, 0, width, height);
         context.fillStyle = "rgba(5,6,8,0.98)";
         context.fillRect(0, 0, width, height);
-
         drawGrid();
 
         const time = frame * 0.012;
@@ -1685,7 +1635,6 @@ html = r'''<!DOCTYPE html>
 
         const cx = width * 0.72 + Math.cos(time) * 70;
         const cy = height * 0.48 + Math.sin(time * 0.8) * 60;
-
         context.strokeStyle = "rgba(255,255,255,0.16)";
         context.beginPath();
         context.arc(cx, cy, 56, 0, Math.PI * 2);
@@ -1710,22 +1659,91 @@ html = r'''<!DOCTYPE html>
       window.addEventListener("resize", resize);
     }
 
+    function initTcpCursor() {
+      const finePointer = window.matchMedia("(pointer: fine)").matches;
+      if (!finePointer) return;
+
+      const trail = document.getElementById("cursorTrail");
+      const ring = document.getElementById("cursorRing");
+      const dot = document.getElementById("cursorDot");
+      const label = document.getElementById("cursorLabel");
+      const position = { x: -100, y: -100 };
+      const smooth = { x: -100, y: -100 };
+      const interactiveSelector = "a, button, input, textarea, select, [data-cursor='interactive']";
+      let visible = false;
+      let active = false;
+      let lastTrail = 0;
+
+      function setVisible(value) {
+        visible = value;
+        trail.style.opacity = value ? "1" : "0";
+        ring.style.opacity = value ? "1" : "0";
+        dot.style.opacity = value ? "1" : "0";
+      }
+
+      function setActive(value) {
+        active = value;
+        ring.classList.toggle("cursor-active", value);
+        dot.classList.toggle("cursor-active", value);
+        label.textContent = value ? "lock" : "tcp";
+      }
+
+      function addTrailPoint(x, y) {
+        const point = document.createElement("span");
+        point.className = "trail-point";
+        point.style.left = `${x}px`;
+        point.style.top = `${y}px`;
+        point.style.opacity = "0.28";
+        trail.prepend(point);
+
+        const points = Array.from(trail.children);
+        points.slice(9).forEach((item) => item.remove());
+        points.forEach((item, index) => {
+          item.style.opacity = `${Math.max(0.08, 0.28 - index * 0.025)}`;
+          item.style.transform = `translate(-50%, -50%) scale(${1 - index * 0.06})`;
+          item.style.transition = "opacity 180ms ease, transform 500ms ease";
+        });
+      }
+
+      window.addEventListener("mousemove", (event) => {
+        position.x = event.clientX;
+        position.y = event.clientY;
+        setVisible(true);
+
+        const element = document.elementFromPoint(event.clientX, event.clientY);
+        setActive(Boolean(element && element.closest(interactiveSelector)));
+
+        const now = performance.now();
+        if (now - lastTrail > 34) {
+          lastTrail = now;
+          addTrailPoint(event.clientX, event.clientY);
+        }
+      });
+
+      window.addEventListener("mouseleave", () => setVisible(false));
+      window.addEventListener("mouseenter", () => setVisible(true));
+
+      function animate() {
+        smooth.x += (position.x - smooth.x) * 0.22;
+        smooth.y += (position.y - smooth.y) * 0.22;
+        dot.style.transform = `translate3d(${smooth.x}px, ${smooth.y}px, 0)`;
+        ring.style.transform = `translate3d(${position.x}px, ${position.y}px, 0)`;
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
-      hydrateIcons();
-      renderNavigation();
-      setupMobileMenu();
-      renderResearch();
+      initNavigation();
+      initTicker();
+      initResearch();
       renderFilters();
       renderProjects();
-      renderSkills();
-      setupCustomCursor();
-      setupHeroCanvas();
+      initSkills();
+      initHeroCanvas();
+      initTcpCursor();
     });
   </script>
 </body>
 </html>
-'''
-
-out = Path("/mnt/data/bahar_bagheri_react_converted.html")
-out.write_text(html, encoding="utf-8")
-print(f"Created {out} ({out.stat().st_size:,} bytes)")
