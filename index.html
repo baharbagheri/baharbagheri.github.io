@@ -1199,13 +1199,29 @@
           </span>
         </a>
 
-        <div class="nav-links" id="navLinks"></div>
+        <div class="nav-links" id="navLinks">
+          <a class="nav-link" href="#home" data-cursor="interactive"><span class="nav-number">01</span>Home</a>
+          <a class="nav-link" href="#about" data-cursor="interactive"><span class="nav-number">02</span>About</a>
+          <a class="nav-link" href="#research" data-cursor="interactive"><span class="nav-number">03</span>Research</a>
+          <a class="nav-link" href="#portfolio" data-cursor="interactive"><span class="nav-number">04</span>Portfolio</a>
+          <a class="nav-link" href="#experiments" data-cursor="interactive"><span class="nav-number">05</span>Experiments</a>
+          <a class="nav-link" href="#cv" data-cursor="interactive"><span class="nav-number">06</span>CV</a>
+          <a class="nav-link" href="#contact" data-cursor="interactive"><span class="nav-number">07</span>Contact</a>
+        </div>
 
         <button class="menu-toggle" id="menuToggle" type="button" data-cursor="interactive" aria-label="Toggle navigation">Menu</button>
       </nav>
 
       <div class="mobile-menu" id="mobileMenu">
-        <div class="container mobile-menu-inner" id="mobileLinks"></div>
+        <div class="container mobile-menu-inner" id="mobileLinks">
+          <a href="#home" data-cursor="interactive"><span class="nav-number">01</span>Home</a>
+          <a href="#about" data-cursor="interactive"><span class="nav-number">02</span>About</a>
+          <a href="#research" data-cursor="interactive"><span class="nav-number">03</span>Research</a>
+          <a href="#portfolio" data-cursor="interactive"><span class="nav-number">04</span>Portfolio</a>
+          <a href="#experiments" data-cursor="interactive"><span class="nav-number">05</span>Experiments</a>
+          <a href="#cv" data-cursor="interactive"><span class="nav-number">06</span>CV</a>
+          <a href="#contact" data-cursor="interactive"><span class="nav-number">07</span>Contact</a>
+        </div>
       </div>
     </header>
 
@@ -1242,7 +1258,15 @@
       </section>
 
       <section class="ticker">
-        <div class="container ticker-list" id="tickerList"></div>
+        <div class="container ticker-list" id="tickerList">
+          <span class="chip">Architecture</span>
+          <span class="chip">Computational Design</span>
+          <span class="chip active">Robotic Arms</span>
+          <span class="chip">Construction Automation</span>
+          <span class="chip">Programming</span>
+          <span class="chip">Digital Fabrication</span>
+          <span class="chip">Spatial Systems</span>
+        </div>
       </section>
 
       <section id="about" class="section">
@@ -1281,7 +1305,12 @@
           </div>
         </div>
 
-        <div class="container research-grid" id="researchGrid"></div>
+        <div class="container research-grid" id="researchGrid">
+          <article class="research-card" data-cursor="interactive"><div class="index">01</div><h3>Geometry</h3><p>Spatial inputs and architectural systems are translated into computational relationships.</p></article>
+          <article class="research-card" data-cursor="interactive"><div class="index">02</div><h3>Parameters</h3><p>Design variables define constraints, fabrication logic, and construction sequencing.</p></article>
+          <article class="research-card" data-cursor="interactive"><div class="index">03</div><h3>Toolpath</h3><p>Curves, paths, and motion data become fabrication-aware robotic instructions.</p></article>
+          <article class="research-card" data-cursor="interactive"><div class="index">04</div><h3>Robotic Motion</h3><p>Robotic arms execute programmable spatial actions within construction workflows.</p></article>
+        </div>
       </section>
 
       <section id="portfolio" class="section">
@@ -1294,8 +1323,144 @@
         </div>
 
         <div class="container">
-          <div class="filters" id="projectFilters"></div>
-          <div class="project-grid" id="projectGrid"></div>
+          <div class="filters" id="projectFilters">
+            <button class="filter-button active" type="button" data-filter="All" data-cursor="interactive">All</button>
+            <button class="filter-button" type="button" data-filter="Robotics" data-cursor="interactive">Robotics</button>
+            <button class="filter-button" type="button" data-filter="Computational Design" data-cursor="interactive">Computational Design</button>
+            <button class="filter-button" type="button" data-filter="Architecture" data-cursor="interactive">Architecture</button>
+            <button class="filter-button" type="button" data-filter="Programming" data-cursor="interactive">Programming</button>
+            <button class="filter-button" type="button" data-filter="Research" data-cursor="interactive">Research</button>
+            <button class="filter-button" type="button" data-filter="Fabrication" data-cursor="interactive">Fabrication</button>
+            <button class="filter-button" type="button" data-filter="Visual Experiments" data-cursor="interactive">Visual Experiments</button>
+          </div>
+
+          <div class="project-grid" id="projectGrid">
+            <article class="project-card" data-category="Robotics" data-tags="Robotics Toolpaths Construction Automation" data-cursor="interactive">
+              <div class="project-visual">
+                <svg viewBox="0 0 500 270" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M40 180 L150 60 L260 135 L420 42" fill="none" stroke="rgba(142,234,255,.5)" stroke-width="1.5"></path>
+                  <path d="M80 66 L210 200 L330 92 L470 178" fill="none" stroke="rgba(255,138,61,.42)" stroke-width="1.5"></path>
+                  <circle cx="150" cy="60" r="5" fill="rgba(142,234,255,.85)"></circle>
+                  <rect x="330" y="88" width="8" height="8" fill="rgba(255,138,61,.75)"></rect>
+                  <path d="M360 220h92M452 220v-38" stroke="rgba(255,255,255,.22)"></path>
+                </svg>
+                <div class="project-id">P-01</div>
+                <div class="project-category">Robotics</div>
+              </div>
+              <div class="project-body">
+                <div class="project-meta"><span class="project-year">2026</span><span>Rhino / Grasshopper / Python / Robot Simulation</span></div>
+                <h3 class="project-title">Robotic Construction Path Study</h3>
+                <p class="project-summary">A fabrication-aware study of robotic trajectories for construction-scale assemblies, focusing on motion logic, tolerances, and spatial sequencing.</p>
+                <div class="tag-list"><span class="project-tag primary">Robotics</span><span class="project-tag">Toolpaths</span><span class="project-tag">Construction Automation</span></div>
+                <button class="case-link" type="button" data-cursor="interactive">Open case file <span>→</span></button>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="Computational Design" data-tags="Parametric Design Geometry Simulation" data-cursor="interactive">
+              <div class="project-visual">
+                <svg viewBox="0 0 500 270" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M40 170 L150 72 L260 131 L420 57" fill="none" stroke="rgba(142,234,255,.5)" stroke-width="1.5"></path>
+                  <path d="M80 78 L210 191 L330 98 L470 165" fill="none" stroke="rgba(255,138,61,.42)" stroke-width="1.5"></path>
+                  <circle cx="168" cy="72" r="5" fill="rgba(142,234,255,.85)"></circle>
+                  <rect x="318" y="94" width="8" height="8" fill="rgba(255,138,61,.75)"></rect>
+                  <path d="M360 220h92M452 220v-38" stroke="rgba(255,255,255,.22)"></path>
+                </svg>
+                <div class="project-id">P-02</div>
+                <div class="project-category">Computational Design</div>
+              </div>
+              <div class="project-body">
+                <div class="project-meta"><span class="project-year">2025</span><span>Grasshopper / Rhino / Python</span></div>
+                <h3 class="project-title">Parametric Spatial System</h3>
+                <p class="project-summary">A computational workflow translating spatial constraints into variable architectural systems with controlled geometric behavior.</p>
+                <div class="tag-list"><span class="project-tag primary">Parametric Design</span><span class="project-tag">Geometry</span><span class="project-tag">Simulation</span></div>
+                <button class="case-link" type="button" data-cursor="interactive">Open case file <span>→</span></button>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="Fabrication" data-tags="Fabrication Material Logic Workflow" data-cursor="interactive">
+              <div class="project-visual">
+                <svg viewBox="0 0 500 270" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M40 160 L150 84 L260 127 L420 72" fill="none" stroke="rgba(142,234,255,.5)" stroke-width="1.5"></path>
+                  <path d="M80 90 L210 182 L330 104 L470 152" fill="none" stroke="rgba(255,138,61,.42)" stroke-width="1.5"></path>
+                  <circle cx="186" cy="84" r="5" fill="rgba(142,234,255,.85)"></circle>
+                  <rect x="306" y="100" width="8" height="8" fill="rgba(255,138,61,.75)"></rect>
+                  <path d="M360 220h92M452 220v-38" stroke="rgba(255,255,255,.22)"></path>
+                </svg>
+                <div class="project-id">P-03</div>
+                <div class="project-category">Fabrication</div>
+              </div>
+              <div class="project-body">
+                <div class="project-meta"><span class="project-year">2025</span><span>CAD-CAM / Fabrication Studies / Grasshopper</span></div>
+                <h3 class="project-title">Digital Fabrication Logic</h3>
+                <p class="project-summary">A fabrication-focused investigation of how material limits, machine paths, and assembly rules can become design parameters.</p>
+                <div class="tag-list"><span class="project-tag primary">Fabrication</span><span class="project-tag">Material Logic</span><span class="project-tag">Workflow</span></div>
+                <button class="case-link" type="button" data-cursor="interactive">Open case file <span>→</span></button>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="Programming" data-tags="Creative Coding Python Generative Geometry" data-cursor="interactive">
+              <div class="project-visual">
+                <svg viewBox="0 0 500 270" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M40 150 L150 96 L260 123 L420 87" fill="none" stroke="rgba(142,234,255,.5)" stroke-width="1.5"></path>
+                  <path d="M80 102 L210 173 L330 110 L470 139" fill="none" stroke="rgba(255,138,61,.42)" stroke-width="1.5"></path>
+                  <circle cx="204" cy="96" r="5" fill="rgba(142,234,255,.85)"></circle>
+                  <rect x="294" y="106" width="8" height="8" fill="rgba(255,138,61,.75)"></rect>
+                  <path d="M360 220h92M452 220v-38" stroke="rgba(255,255,255,.22)"></path>
+                </svg>
+                <div class="project-id">P-04</div>
+                <div class="project-category">Programming</div>
+              </div>
+              <div class="project-body">
+                <div class="project-meta"><span class="project-year">2024</span><span>Python / Processing / Geometry Algorithms</span></div>
+                <h3 class="project-title">Code-Based Pattern Atlas</h3>
+                <p class="project-summary">A collection of code-generated geometries studying repetition, field behavior, density gradients, and computational ornament.</p>
+                <div class="tag-list"><span class="project-tag primary">Creative Coding</span><span class="project-tag">Python</span><span class="project-tag">Generative Geometry</span></div>
+                <button class="case-link" type="button" data-cursor="interactive">Open case file <span>→</span></button>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="Architecture" data-tags="Architecture Assembly Systems" data-cursor="interactive">
+              <div class="project-visual">
+                <svg viewBox="0 0 500 270" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M40 140 L150 108 L260 119 L420 102" fill="none" stroke="rgba(142,234,255,.5)" stroke-width="1.5"></path>
+                  <path d="M80 114 L210 164 L330 116 L470 126" fill="none" stroke="rgba(255,138,61,.42)" stroke-width="1.5"></path>
+                  <circle cx="222" cy="108" r="5" fill="rgba(142,234,255,.85)"></circle>
+                  <rect x="282" y="112" width="8" height="8" fill="rgba(255,138,61,.75)"></rect>
+                  <path d="M360 220h92M452 220v-38" stroke="rgba(255,255,255,.22)"></path>
+                </svg>
+                <div class="project-id">P-05</div>
+                <div class="project-category">Architecture</div>
+              </div>
+              <div class="project-body">
+                <div class="project-meta"><span class="project-year">2024</span><span>Rhino / Physical Modeling / Visualization</span></div>
+                <h3 class="project-title">Architectural Assembly Prototype</h3>
+                <p class="project-summary">An architectural assembly study focused on modular structure, spatial hierarchy, construction logic, and representational precision.</p>
+                <div class="tag-list"><span class="project-tag primary">Architecture</span><span class="project-tag">Assembly</span><span class="project-tag">Systems</span></div>
+                <button class="case-link" type="button" data-cursor="interactive">Open case file <span>→</span></button>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="Research" data-tags="Research Automation Robotics" data-cursor="interactive">
+              <div class="project-visual">
+                <svg viewBox="0 0 500 270" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M40 130 L150 120 L260 115 L420 117" fill="none" stroke="rgba(142,234,255,.5)" stroke-width="1.5"></path>
+                  <path d="M80 126 L210 155 L330 122 L470 113" fill="none" stroke="rgba(255,138,61,.42)" stroke-width="1.5"></path>
+                  <circle cx="240" cy="120" r="5" fill="rgba(142,234,255,.85)"></circle>
+                  <rect x="270" y="118" width="8" height="8" fill="rgba(255,138,61,.75)"></rect>
+                  <path d="M360 220h92M452 220v-38" stroke="rgba(255,255,255,.22)"></path>
+                </svg>
+                <div class="project-id">P-06</div>
+                <div class="project-category">Research</div>
+              </div>
+              <div class="project-body">
+                <div class="project-meta"><span class="project-year">2026</span><span>Research Mapping / Diagrams / Computational Workflow</span></div>
+                <h3 class="project-title">Construction Automation Research Map</h3>
+                <p class="project-summary">A visual research framework connecting robotic arms, digital fabrication, construction sequencing, and spatial computation.</p>
+                <div class="tag-list"><span class="project-tag primary">Research</span><span class="project-tag">Automation</span><span class="project-tag">Robotics</span></div>
+                <button class="case-link" type="button" data-cursor="interactive">Open case file <span>→</span></button>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -1307,7 +1472,50 @@
             <p>A lab-like space for robotic path visualizations, generative geometry, simulation studies, construction sequencing diagrams, and code-based spatial experiments.</p>
           </div>
 
-          <div class="skill-grid" id="skillGrid"></div>
+          <div class="skill-grid" id="skillGrid">
+            <article class="skill-card" data-cursor="interactive">
+              <div class="skill-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+              </div>
+              <h3>Architecture</h3>
+              <p>Spatial systems, design logic, representation</p>
+            </article>
+            <article class="skill-card" data-cursor="interactive">
+              <div class="skill-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+              </div>
+              <h3>Computation</h3>
+              <p>Parametric models, algorithms, generative workflows</p>
+            </article>
+            <article class="skill-card" data-cursor="interactive">
+              <div class="skill-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+              </div>
+              <h3>Robotics</h3>
+              <p>End-effector paths, automation, construction systems</p>
+            </article>
+            <article class="skill-card" data-cursor="interactive">
+              <div class="skill-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+              </div>
+              <h3>Programming</h3>
+              <p>Python, creative coding, interface thinking</p>
+            </article>
+            <article class="skill-card" data-cursor="interactive">
+              <div class="skill-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+              </div>
+              <h3>Fabrication</h3>
+              <p>Toolpaths, material logic, digital production</p>
+            </article>
+            <article class="skill-card" data-cursor="interactive">
+              <div class="skill-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+              </div>
+              <h3>Research</h3>
+              <p>Academic questions, methods, documentation</p>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -1342,130 +1550,10 @@
   </div>
 
   <script>
-    const navItems = [
-      { label: "Home", href: "#home" },
-      { label: "About", href: "#about" },
-      { label: "Research", href: "#research" },
-      { label: "Portfolio", href: "#portfolio" },
-      { label: "Experiments", href: "#experiments" },
-      { label: "CV", href: "#cv" },
-      { label: "Contact", href: "#contact" }
-    ];
-
-    const projectFilters = [
-      "All",
-      "Robotics",
-      "Computational Design",
-      "Architecture",
-      "Programming",
-      "Research",
-      "Fabrication",
-      "Visual Experiments"
-    ];
-
-    const projects = [
-      {
-        id: "P-01",
-        title: "Robotic Construction Path Study",
-        category: "Robotics",
-        year: "2026",
-        tools: "Rhino / Grasshopper / Python / Robot Simulation",
-        summary: "A fabrication-aware study of robotic trajectories for construction-scale assemblies, focusing on motion logic, tolerances, and spatial sequencing.",
-        tags: ["Robotics", "Toolpaths", "Construction Automation"]
-      },
-      {
-        id: "P-02",
-        title: "Parametric Spatial System",
-        category: "Computational Design",
-        year: "2025",
-        tools: "Grasshopper / Rhino / Python",
-        summary: "A computational workflow translating spatial constraints into variable architectural systems with controlled geometric behavior.",
-        tags: ["Parametric Design", "Geometry", "Simulation"]
-      },
-      {
-        id: "P-03",
-        title: "Digital Fabrication Logic",
-        category: "Fabrication",
-        year: "2025",
-        tools: "CAD-CAM / Fabrication Studies / Grasshopper",
-        summary: "A fabrication-focused investigation of how material limits, machine paths, and assembly rules can become design parameters.",
-        tags: ["Fabrication", "Material Logic", "Workflow"]
-      },
-      {
-        id: "P-04",
-        title: "Code-Based Pattern Atlas",
-        category: "Programming",
-        year: "2024",
-        tools: "Python / Processing / Geometry Algorithms",
-        summary: "A collection of code-generated geometries studying repetition, field behavior, density gradients, and computational ornament.",
-        tags: ["Creative Coding", "Python", "Generative Geometry"]
-      },
-      {
-        id: "P-05",
-        title: "Architectural Assembly Prototype",
-        category: "Architecture",
-        year: "2024",
-        tools: "Rhino / Physical Modeling / Visualization",
-        summary: "An architectural assembly study focused on modular structure, spatial hierarchy, construction logic, and representational precision.",
-        tags: ["Architecture", "Assembly", "Systems"]
-      },
-      {
-        id: "P-06",
-        title: "Construction Automation Research Map",
-        category: "Research",
-        year: "2026",
-        tools: "Research Mapping / Diagrams / Computational Workflow",
-        summary: "A visual research framework connecting robotic arms, digital fabrication, construction sequencing, and spatial computation.",
-        tags: ["Research", "Automation", "Robotics"]
-      }
-    ];
-
-    const tickerItems = ["Architecture", "Computational Design", "Robotic Arms", "Construction Automation", "Programming", "Digital Fabrication", "Spatial Systems"];
-
-    const researchItems = [
-      ["01", "Geometry", "Spatial inputs and architectural systems are translated into computational relationships."],
-      ["02", "Parameters", "Design variables define constraints, fabrication logic, and construction sequencing."],
-      ["03", "Toolpath", "Curves, paths, and motion data become fabrication-aware robotic instructions."],
-      ["04", "Robotic Motion", "Robotic arms execute programmable spatial actions within construction workflows."]
-    ];
-
-    const skills = [
-      ["Architecture", "Spatial systems, design logic, representation"],
-      ["Computation", "Parametric models, algorithms, generative workflows"],
-      ["Robotics", "End-effector paths, automation, construction systems"],
-      ["Programming", "Python, creative coding, interface thinking"],
-      ["Fabrication", "Toolpaths, material logic, digital production"],
-      ["Research", "Academic questions, methods, documentation"]
-    ];
-
-    let activeFilter = "All";
-
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
     function initNavigation() {
-      const navLinks = document.getElementById("navLinks");
-      const mobileLinks = document.getElementById("mobileLinks");
       const menuToggle = document.getElementById("menuToggle");
       const mobileMenu = document.getElementById("mobileMenu");
-
-      navLinks.innerHTML = navItems.map((item, index) => `
-        <a class="nav-link" href="${item.href}" data-cursor="interactive">
-          <span class="nav-number">${String(index + 1).padStart(2, "0")}</span>${item.label}
-        </a>
-      `).join("");
-
-      mobileLinks.innerHTML = navItems.map((item, index) => `
-        <a href="${item.href}" data-cursor="interactive">
-          <span class="nav-number">${String(index + 1).padStart(2, "0")}</span>${item.label}
-        </a>
-      `).join("");
+      const mobileLinks = document.getElementById("mobileLinks");
 
       menuToggle.addEventListener("click", () => {
         const isOpen = mobileMenu.classList.toggle("is-open");
@@ -1480,96 +1568,26 @@
       });
     }
 
-    function initTicker() {
-      const tickerList = document.getElementById("tickerList");
-      tickerList.innerHTML = tickerItems.map((item, index) => `<span class="chip ${index === 2 ? "active" : ""}">${escapeHtml(item)}</span>`).join("");
-    }
+    function initProjectFilters() {
+      const filterWrap = document.getElementById("projectFilters");
+      const cards = Array.from(document.querySelectorAll(".project-card"));
 
-    function initResearch() {
-      const grid = document.getElementById("researchGrid");
-      grid.innerHTML = researchItems.map(([index, title, text]) => `
-        <article class="research-card" data-cursor="interactive">
-          <div class="index">${index}</div>
-          <h3>${escapeHtml(title)}</h3>
-          <p>${escapeHtml(text)}</p>
-        </article>
-      `).join("");
-    }
-
-    function projectSvg(index) {
-      const p1 = `M40 ${180 - index * 10} L150 ${60 + index * 12} L260 ${135 - index * 4} L420 ${42 + index * 15}`;
-      const p2 = `M80 ${66 + index * 12} L210 ${200 - index * 9} L330 ${92 + index * 6} L470 ${178 - index * 13}`;
-      return `
-        <svg viewBox="0 0 500 270" preserveAspectRatio="none" aria-hidden="true">
-          <path d="${p1}" fill="none" stroke="rgba(142,234,255,.5)" stroke-width="1.5"></path>
-          <path d="${p2}" fill="none" stroke="rgba(255,138,61,.42)" stroke-width="1.5"></path>
-          <circle cx="${150 + index * 18}" cy="${60 + index * 12}" r="5" fill="rgba(142,234,255,.85)"></circle>
-          <rect x="${330 - index * 12}" y="${88 + index * 6}" width="8" height="8" fill="rgba(255,138,61,.75)"></rect>
-          <path d="M360 220h92M452 220v-38" stroke="rgba(255,255,255,.22)"></path>
-        </svg>
-      `;
-    }
-
-    function renderFilters() {
-      const filters = document.getElementById("projectFilters");
-      filters.innerHTML = projectFilters.map((filter) => `
-        <button class="filter-button ${filter === activeFilter ? "active" : ""}" type="button" data-filter="${escapeHtml(filter)}" data-cursor="interactive">${escapeHtml(filter)}</button>
-      `).join("");
-
-      filters.querySelectorAll("button").forEach((button) => {
+      filterWrap.querySelectorAll(".filter-button").forEach((button) => {
         button.addEventListener("click", () => {
-          activeFilter = button.dataset.filter;
-          renderFilters();
-          renderProjects();
+          const filter = button.getAttribute("data-filter");
+
+          filterWrap.querySelectorAll(".filter-button").forEach((item) => {
+            item.classList.toggle("active", item === button);
+          });
+
+          cards.forEach((card) => {
+            const category = card.getAttribute("data-category") || "";
+            const tags = card.getAttribute("data-tags") || "";
+            const shouldShow = filter === "All" || category === filter || tags.includes(filter);
+            card.style.display = shouldShow ? "" : "none";
+          });
         });
       });
-    }
-
-    function renderProjects() {
-      const grid = document.getElementById("projectGrid");
-      const visibleProjects = activeFilter === "All"
-        ? projects
-        : projects.filter((project) => project.category === activeFilter || project.tags.includes(activeFilter));
-
-      grid.innerHTML = visibleProjects.map((project, index) => `
-        <article class="project-card" data-cursor="interactive">
-          <div class="project-visual">
-            ${projectSvg(index)}
-            <div class="project-id">${escapeHtml(project.id)}</div>
-            <div class="project-category">${escapeHtml(project.category)}</div>
-          </div>
-          <div class="project-body">
-            <div class="project-meta">
-              <span class="project-year">${escapeHtml(project.year)}</span>
-              <span>${escapeHtml(project.tools)}</span>
-            </div>
-            <h3 class="project-title">${escapeHtml(project.title)}</h3>
-            <p class="project-summary">${escapeHtml(project.summary)}</p>
-            <div class="tag-list">
-              ${project.tags.map((tag, tagIndex) => `<span class="project-tag ${tagIndex === 0 ? "primary" : ""}">${escapeHtml(tag)}</span>`).join("")}
-            </div>
-            <button class="case-link" type="button" data-cursor="interactive">Open case file <span>→</span></button>
-          </div>
-        </article>
-      `).join("");
-    }
-
-    function initSkills() {
-      const skillGrid = document.getElementById("skillGrid");
-      skillGrid.innerHTML = skills.map(([title, description]) => `
-        <article class="skill-card" data-cursor="interactive">
-          <div class="skill-icon" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="7" height="7" rx="1"></rect>
-              <rect x="14" y="3" width="7" height="7" rx="1"></rect>
-              <rect x="3" y="14" width="7" height="7" rx="1"></rect>
-              <rect x="14" y="14" width="7" height="7" rx="1"></rect>
-            </svg>
-          </div>
-          <h3>${escapeHtml(title)}</h3>
-          <p>${escapeHtml(description)}</p>
-        </article>
-      `).join("");
     }
 
     function initHeroCanvas() {
@@ -1579,7 +1597,6 @@
       let width = 0;
       let height = 0;
       let frame = 0;
-      let animationId = 0;
 
       function resize() {
         const ratio = window.devicePixelRatio || 1;
@@ -1651,7 +1668,7 @@
         context.fillText("X: 07.41  Y: 12.08  Z: 03.16", 26, 52);
 
         if (!reducedMotion) frame += 1;
-        animationId = requestAnimationFrame(draw);
+        requestAnimationFrame(draw);
       }
 
       resize();
@@ -1670,19 +1687,15 @@
       const position = { x: -100, y: -100 };
       const smooth = { x: -100, y: -100 };
       const interactiveSelector = "a, button, input, textarea, select, [data-cursor='interactive']";
-      let visible = false;
-      let active = false;
       let lastTrail = 0;
 
       function setVisible(value) {
-        visible = value;
         trail.style.opacity = value ? "1" : "0";
         ring.style.opacity = value ? "1" : "0";
         dot.style.opacity = value ? "1" : "0";
       }
 
       function setActive(value) {
-        active = value;
         ring.classList.toggle("cursor-active", value);
         dot.classList.toggle("cursor-active", value);
         label.textContent = value ? "lock" : "tcp";
@@ -1736,11 +1749,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       initNavigation();
-      initTicker();
-      initResearch();
-      renderFilters();
-      renderProjects();
-      initSkills();
+      initProjectFilters();
       initHeroCanvas();
       initTcpCursor();
     });
